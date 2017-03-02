@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
     public static GameManager instance = null;
-    public StarGenerator boardScript;
-
-    private int level = 3;
+    public StarGenerator generator;
 
     void Awake() {
         if (instance == null) {
@@ -17,12 +15,12 @@ public class GameManager : MonoBehaviour {
         }
 
         DontDestroyOnLoad(gameObject);
-        boardScript = GetComponent<StarGenerator>();
+        generator = GetComponent<StarGenerator>();
         InitGame();
     }
 
     void InitGame() {
-        boardScript.SetupScene(level);
+        generator.SetupScene();
     }
 
     // Update is called once per frame
