@@ -41,16 +41,28 @@ public class StarGenerator : MonoBehaviour {
 
         // TODO: rotate between quadrants for generation.
         // Generates stars.
-        for (int q = 0; q < quadrants; q++) {
-            while (locationsAvailable[q].Count > 0) {
-                // TODO: Multiple star types.
-                // The star type to instantiate.
-                GameObject toInstantiate = stars[0];
-                GameObject instance = Instantiate(toInstantiate, RandomPosition(q), Quaternion.identity) as GameObject;
-                instance.transform.localScale = new Vector3(4f, 4f, 4f);
-                instance.transform.SetParent(starmap);
+        bool hasCountChanged = true;
+        while (hasCountChanged) {
+            hasCountChanged = false;
+
+            for (int q = 0; q < quadrants; q++) {
+                if (locationsAvailable[q].Count > 0) {
+                    hasCountChanged = true;
+                    CreateNewStar(q);
+                }
             }
         }
+
+        //for (int q = 0; q < quadrants; q++) {
+        //    while (locationsAvailable[q].Count > 0) {
+        //        // TODO: Multiple star types.
+        //        // The star type to instantiate.
+        //        GameObject toInstantiate = stars[0];
+        //        GameObject instance = Instantiate(toInstantiate, RandomPosition(q), Quaternion.identity) as GameObject;
+        //        instance.transform.localScale = new Vector3(4f, 4f, 4f);
+        //        instance.transform.SetParent(starmap);
+        //    }
+        //}
     }
 
     Vector3 RandomPosition(int quadrant) {
@@ -142,6 +154,13 @@ public class StarGenerator : MonoBehaviour {
         for (; y < condition; y++) {
             locationsAvailable[q].Remove(new KeyValuePair<int, int>(x, y));
         }
+    }
+
+    void CreateNewStar(int q) {
+        GameObject toInstantiate = stars[0];
+        GameObject instance = Instantiate(toInstantiate, RandomPosition(q), Quaternion.identity) as GameObject;
+        instance.transform.localScale = new Vector3(4f, 4f, 4f);
+        instance.transform.SetParent(starmap);
     }
 
     public void SetupScene() {
