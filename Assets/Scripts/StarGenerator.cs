@@ -5,9 +5,9 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class StarGenerator : MonoBehaviour {
-    public int quadrants = 4;
-    public int columns = 12;
-    public int rows = 12;
+    public const int quadrants = 4;
+    public const int columns = 12;
+    public const int rows = 12;
     public GameObject[] stars;
 
     private Transform starmap;
@@ -15,6 +15,8 @@ public class StarGenerator : MonoBehaviour {
     private KeyValuePair<int, int>[] quadrantLocations;
 
     void InitializeList() {
+        // TODO: change fixed square size.
+        // Set up the quadrant locations.
         quadrantLocations = new KeyValuePair<int, int>[quadrants];
         int i = 0;
         for (int x = 0; x < 2; x++) {
@@ -39,8 +41,7 @@ public class StarGenerator : MonoBehaviour {
     void StarmapSetup() {
         starmap = new GameObject("Starmap").transform;
 
-        // TODO: rotate between quadrants for generation.
-        // Generates stars.
+        // Generates stars, one by one cycling through each quadrant.
         bool hasCountChanged = true;
         while (hasCountChanged) {
             hasCountChanged = false;
@@ -52,17 +53,6 @@ public class StarGenerator : MonoBehaviour {
                 }
             }
         }
-
-        //for (int q = 0; q < quadrants; q++) {
-        //    while (locationsAvailable[q].Count > 0) {
-        //        // TODO: Multiple star types.
-        //        // The star type to instantiate.
-        //        GameObject toInstantiate = stars[0];
-        //        GameObject instance = Instantiate(toInstantiate, RandomPosition(q), Quaternion.identity) as GameObject;
-        //        instance.transform.localScale = new Vector3(4f, 4f, 4f);
-        //        instance.transform.SetParent(starmap);
-        //    }
-        //}
     }
 
     Vector3 RandomPosition(int quadrant) {
@@ -97,7 +87,7 @@ public class StarGenerator : MonoBehaviour {
 
     Vector3 GetRandomPositionFromCoords(KeyValuePair<int, int> coords, int quadrant) {
         return new Vector3(
-            coords.Key + (quadrantLocations[quadrant].Value * rows) + GetRandomDeviation(1),    // x
+            coords.Key   + (quadrantLocations[quadrant].Value * rows)  + GetRandomDeviation(1), // x
             coords.Value + (quadrantLocations[quadrant].Key * columns) + GetRandomDeviation(1), // y
             quadrant // z, unused in 2D game, used for debug
         );
@@ -107,6 +97,7 @@ public class StarGenerator : MonoBehaviour {
         return (Random.Range(0, max * 2) - max) * 0.1f;
     }
 
+    // Take a quadrant x and y position and get its index.
     int GetQuadrantIndexFromCoords(int x, int y) {
         int q = -1;
         for (int i = 0; i < quadrants; i++) {
@@ -118,6 +109,7 @@ public class StarGenerator : MonoBehaviour {
         return q;
     }
 
+    // Remove all star positions within a 4 star radius.
     void RemoveAdjacentQuadrantPositions(KeyValuePair<int, int> coords, int quadrant, int q, int qx, int qy) {
         int x, condition;
         if (qx < quadrantLocations[quadrant].Key) {
@@ -131,13 +123,13 @@ public class StarGenerator : MonoBehaviour {
             condition = (coords.Key + 4) - rows;
         }
 
-        for (; x < condition; x++) {
+        for (; x <= condition; x++) {
             RemoveQuadrantColumns(coords, quadrant, q, qy, x);
         }
     }
 
 
-
+    // Remove all stars in a column for a quadrant.
     void RemoveQuadrantColumns(KeyValuePair<int, int> coords, int quadrant, int q, int qy, int x) {
         int y, condition;
         if (qy < quadrantLocations[quadrant].Value) {
@@ -151,11 +143,12 @@ public class StarGenerator : MonoBehaviour {
             condition = (coords.Value + 4) - columns;
         }
 
-        for (; y < condition; y++) {
+        for (; y <= condition; y++) {
             locationsAvailable[q].Remove(new KeyValuePair<int, int>(x, y));
         }
     }
 
+    // Create a star at a random position and remove all possible positions surrounding it.
     void CreateNewStar(int q) {
         GameObject toInstantiate = stars[0];
         GameObject instance = Instantiate(toInstantiate, RandomPosition(q), Quaternion.identity) as GameObject;
