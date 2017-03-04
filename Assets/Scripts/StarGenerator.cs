@@ -47,7 +47,7 @@ public class StarGenerator : MonoBehaviour {
                 // The star type to instantiate.
                 GameObject toInstantiate = stars[0];
                 GameObject instance = Instantiate(toInstantiate, RandomPosition(q), Quaternion.identity) as GameObject;
-
+                instance.transform.localScale = new Vector3(4f, 4f, 4f);
                 instance.transform.SetParent(starmap);
             }
         }
@@ -56,9 +56,9 @@ public class StarGenerator : MonoBehaviour {
     Vector3 RandomPosition(int quadrant) {
         int randomIndex = Random.Range(0, locationsAvailable[quadrant].Count);
         KeyValuePair<int, int> coords = locationsAvailable[quadrant][randomIndex];
-        Vector3 randomPosition = new Vector3(coords.Key + (quadrantLocations[quadrant].Value * rows) + GetRandomDeviation(1), coords.Value + (quadrantLocations[quadrant].Key * columns) + GetRandomDeviation(1), quadrant);
-        // Need to remove coords from other quadrants.
-        //coords = new KeyValuePair<int, int>(coords.Value, coords.Key);
+        Vector3 randomPosition = GetRandomPositionFromCoords(coords, quadrant);
+
+        // For every quadrant surrounding the current quadrant, including the current quadrant, remove nearby stars.
         for (int qx = quadrantLocations[quadrant].Key - 1; qx <= quadrantLocations[quadrant].Key + 1; qx++) {
             if (qx < 0) {
                 continue;
@@ -69,86 +69,79 @@ public class StarGenerator : MonoBehaviour {
                     continue;
                 }
 
-                int q = -1;
-                for (int i = 0; i < quadrants; i++) {
-                    if (quadrantLocations[i].Key == qx && quadrantLocations[i].Value == qy) {
-                        q = i;
-                        break;
-                    }
-                }
+                // Find the index of the current quadrant.
+                int q = GetQuadrantIndexFromCoords(qx, qy);
 
                 if (q == -1) {
                     continue;
                 }
 
-                if (qx < quadrantLocations[quadrant].Key) {
-                    for (int x = rows + (coords.Key - 4); x < rows + (coords.Key + 4); x++) {
-                        if (qy < quadrantLocations[quadrant].Value) {
-                            for (int y = columns + (coords.Value - 4); y < columns + (coords.Value + 4); y++) {
-                                locationsAvailable[q].Remove(new KeyValuePair<int, int>(x, y));
-                            }
-                        } else if (qy == quadrantLocations[quadrant].Value) {
-                            for (int y = coords.Value - 4; y < coords.Value + 4; y++) {
-                                locationsAvailable[q].Remove(new KeyValuePair<int, int>(x, y));
-                            }
-                        } else {
-                            for (int y = (coords.Value - 4) - columns; y < (coords.Value + 4) - columns; y++) {
-                                locationsAvailable[q].Remove(new KeyValuePair<int, int>(x, y));
-                            }
-                        }
-                    }
-                } else if (qx == quadrantLocations[quadrant].Key) {
-                    for (int x = coords.Key - 4; x < coords.Key + 4; x++) {
-                        if (qy < quadrantLocations[quadrant].Value) {
-                            for (int y = columns + (coords.Value - 4); y < columns + (coords.Value + 4); y++) {
-                                locationsAvailable[q].Remove(new KeyValuePair<int, int>(x, y));
-                            }
-                        }
-                        else if (qy == quadrantLocations[quadrant].Value) {
-                            for (int y = coords.Value - 4; y < coords.Value + 4; y++) {
-                                locationsAvailable[q].Remove(new KeyValuePair<int, int>(x, y));
-                            }
-                        }
-                        else {
-                            for (int y = (coords.Value - 4) - columns; y < (coords.Value + 4) - columns; y++) {
-                                locationsAvailable[q].Remove(new KeyValuePair<int, int>(x, y));
-                            }
-                        }
-                    }
-                } else {
-                    for (int x = (coords.Key - 4) - rows; x < (coords.Key + 4) - rows; x++) {
-                        if (qy < quadrantLocations[quadrant].Value) {
-                            for (int y = columns + (coords.Value - 4); y < columns + (coords.Value + 4); y++) {
-                                locationsAvailable[q].Remove(new KeyValuePair<int, int>(x, y));
-                            }
-                        }
-                        else if (qy == quadrantLocations[quadrant].Value) {
-                            for (int y = coords.Value - 4; y < coords.Value + 4; y++) {
-                                locationsAvailable[q].Remove(new KeyValuePair<int, int>(x, y));
-                            }
-                        }
-                        else {
-                            for (int y = (coords.Value - 4) - columns; y < (coords.Value + 4) - columns; y++) {
-                                locationsAvailable[q].Remove(new KeyValuePair<int, int>(x, y));
-                            }
-                        }
-                    }
-                }
-
+                RemoveAdjacentQuadrantPositions(coords, quadrant, q, qx, qy);
             }
         }
-
-        //for (int x = coords.Key - 4; x < coords.Key + 4; x++) {
-        //    for (int y = coords.Value - 4; y < coords.Value + 4; y++) {
-        //        locationsAvailable[quadrant].Remove(new KeyValuePair<int, int>(y, x));
-        //    }
-        //}
 
         return randomPosition;
     }
 
+    Vector3 GetRandomPositionFromCoords(KeyValuePair<int, int> coords, int quadrant) {
+        return new Vector3(
+            coords.Key + (quadrantLocations[quadrant].Value * rows) + GetRandomDeviation(1),    // x
+            coords.Value + (quadrantLocations[quadrant].Key * columns) + GetRandomDeviation(1), // y
+            quadrant // z, unused in 2D game, used for debug
+        );
+    }
+
     float GetRandomDeviation(int max) {
         return (Random.Range(0, max * 2) - max) * 0.1f;
+    }
+
+    int GetQuadrantIndexFromCoords(int x, int y) {
+        int q = -1;
+        for (int i = 0; i < quadrants; i++) {
+            if (quadrantLocations[i].Key == x && quadrantLocations[i].Value == y) {
+                q = i;
+                break;
+            }
+        }
+        return q;
+    }
+
+    void RemoveAdjacentQuadrantPositions(KeyValuePair<int, int> coords, int quadrant, int q, int qx, int qy) {
+        int x, condition;
+        if (qx < quadrantLocations[quadrant].Key) {
+            x = rows + (coords.Key - 4);
+            condition = rows + (coords.Key + 4);
+        } else if (qx == quadrantLocations[quadrant].Key) {
+            x = coords.Key - 4;
+            condition = coords.Key + 4;
+        } else {
+            x = (coords.Key - 4) - rows;
+            condition = (coords.Key + 4) - rows;
+        }
+
+        for (; x < condition; x++) {
+            RemoveQuadrantColumns(coords, quadrant, q, qy, x);
+        }
+    }
+
+
+
+    void RemoveQuadrantColumns(KeyValuePair<int, int> coords, int quadrant, int q, int qy, int x) {
+        int y, condition;
+        if (qy < quadrantLocations[quadrant].Value) {
+            y = columns + (coords.Value - 4);
+            condition = columns + (coords.Value + 4);
+        } else if (qy == quadrantLocations[quadrant].Value) {
+            y = coords.Value - 4;
+            condition = coords.Value + 4;
+        } else {
+            y = (coords.Value - 4) - columns;
+            condition = (coords.Value + 4) - columns;
+        }
+
+        for (; y < condition; y++) {
+            locationsAvailable[q].Remove(new KeyValuePair<int, int>(x, y));
+        }
     }
 
     public void SetupScene() {
