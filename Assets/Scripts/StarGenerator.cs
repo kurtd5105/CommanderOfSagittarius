@@ -8,6 +8,17 @@ public class StarGenerator : MonoBehaviour {
     public const int quadrants = 4;
     public const int columns = 12;
     public const int rows = 12;
+
+    /* 
+     * Stars: A list of the game stars to instantiate.
+     * The stars are required to be in the following order:
+     * 1. Yellow
+     * 2. Red
+     * 3. Green
+     * 4. Blue
+     * 5. Purple
+     * 6. White
+     */
     public GameObject[] stars;
 
     private Transform starmap;
@@ -94,7 +105,7 @@ public class StarGenerator : MonoBehaviour {
     }
 
     float GetRandomDeviation(int max) {
-        return (Random.Range(0, max * 2) - max) * 0.1f;
+        return (Random.Range(0, max * 2 + 1) - max) * 0.1f;
     }
 
     // Take a quadrant x and y position and get its index.
@@ -148,9 +159,29 @@ public class StarGenerator : MonoBehaviour {
         }
     }
 
+    GameObject GetRandomStarType() {
+        int r = Random.Range(1, 17);
+
+        // TODO: Use an actual distribution
+        // 3 yellow + 4 red + 4 green + 3 blue + 1 purple + 1 white = 16
+        if (r <= 3) {
+            return stars[0];
+        } else if (r <= 7) {
+            return stars[1];
+        } else if (r <= 11) {
+            return stars[2];
+        } else if (r <= 14) {
+            return stars[3];
+        } else if (r == 15) {
+            return stars[4];
+        } else {
+            return stars[5];
+        }
+    }
+
     // Create a star at a random position and remove all possible positions surrounding it.
     void CreateNewStar(int q) {
-        GameObject toInstantiate = stars[0];
+        GameObject toInstantiate = GetRandomStarType();
         GameObject instance = Instantiate(toInstantiate, RandomPosition(q), Quaternion.identity) as GameObject;
         instance.transform.localScale = new Vector3(4f, 4f, 4f);
         instance.transform.SetParent(starmap);
