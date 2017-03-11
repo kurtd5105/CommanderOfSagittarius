@@ -24,10 +24,17 @@ public class StarGenerator : MonoBehaviour {
     public List<GameObject> generatedStars;
 
     private Transform starmap;
+    private Transform homeworldParent;
     private List<KeyValuePair<int, int>>[] locationsAvailable;
     private KeyValuePair<int, int>[] quadrantLocations;
 
-    void InitializeList() {
+    void Initialize() {
+        starmap = new GameObject("Starmap").transform;
+        homeworldParent = new GameObject("Homeworlds").transform;
+
+        InitializeLists();
+    }
+    void InitializeLists() {
         // TODO: change fixed square size.
         // Set up the quadrant locations.
         quadrantLocations = new KeyValuePair<int, int>[quadrants];
@@ -54,13 +61,12 @@ public class StarGenerator : MonoBehaviour {
     void SetupHomeworlds() {
         for (int i = 0; i < homeworlds; i++) {
             CreateNewStar(i, stars[0]);
+            generatedStars[i].transform.SetParent(homeworldParent);
         }
         // TODO: Setup homeworld properties here.
     }
 
     void StarmapSetup() {
-        starmap = new GameObject("Starmap").transform;
-
         // Generates stars, one by one cycling through each quadrant.
         bool hasCountChanged = true;
         while (hasCountChanged) {
@@ -198,7 +204,7 @@ public class StarGenerator : MonoBehaviour {
     }
 
     public void SetupScene() {
-        InitializeList();
+        Initialize();
         SetupHomeworlds();
         // TODO: Add Orion.
         StarmapSetup();
