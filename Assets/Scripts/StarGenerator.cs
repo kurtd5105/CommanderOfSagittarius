@@ -5,6 +5,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class StarGenerator : MonoBehaviour {
+    public const int homeworlds = 4;
     public const int quadrants = 4;
     public const int columns = 12;
     public const int rows = 12;
@@ -20,6 +21,7 @@ public class StarGenerator : MonoBehaviour {
      * 6. White
      */
     public GameObject[] stars;
+    public List<GameObject> generatedStars;
 
     private Transform starmap;
     private List<KeyValuePair<int, int>>[] locationsAvailable;
@@ -49,6 +51,13 @@ public class StarGenerator : MonoBehaviour {
         }
     }
 
+    void SetupHomeworlds() {
+        for (int i = 0; i < homeworlds; i++) {
+            CreateNewStar(i, stars[0]);
+        }
+        // TODO: Setup homeworld properties here.
+    }
+
     void StarmapSetup() {
         starmap = new GameObject("Starmap").transform;
 
@@ -60,7 +69,8 @@ public class StarGenerator : MonoBehaviour {
             for (int q = 0; q < quadrants; q++) {
                 if (locationsAvailable[q].Count > 0) {
                     hasCountChanged = true;
-                    CreateNewStar(q);
+                    GameObject toInstantiate = GetRandomStarType();
+                    CreateNewStar(q, toInstantiate);
                 }
             }
         }
@@ -180,15 +190,17 @@ public class StarGenerator : MonoBehaviour {
     }
 
     // Create a star at a random position and remove all possible positions surrounding it.
-    void CreateNewStar(int q) {
-        GameObject toInstantiate = GetRandomStarType();
+    void CreateNewStar(int q, GameObject toInstantiate) {
         GameObject instance = Instantiate(toInstantiate, RandomPosition(q), Quaternion.identity) as GameObject;
         instance.transform.localScale = new Vector3(4f, 4f, 4f);
         instance.transform.SetParent(starmap);
+        generatedStars.Add(instance);
     }
 
     public void SetupScene() {
         InitializeList();
+        SetupHomeworlds();
+        // TODO: Add Orion.
         StarmapSetup();
     }
 }
