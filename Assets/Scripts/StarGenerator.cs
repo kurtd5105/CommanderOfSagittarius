@@ -60,7 +60,8 @@ public class StarGenerator : MonoBehaviour {
 
     void SetupHomeworlds() {
         for (int i = 0; i < homeworlds; i++) {
-            CreateNewStar(i, stars[0]);
+            CreateNewStar(i, 0, stars[0]);
+            generatedStars[i].transform.localScale = new Vector3(5f, 5f, 5f);
             generatedStars[i].transform.SetParent(homeworldParent);
         }
         // TODO: Setup homeworld properties here.
@@ -76,16 +77,16 @@ public class StarGenerator : MonoBehaviour {
                 if (locationsAvailable[q].Count > 0) {
                     hasCountChanged = true;
                     GameObject toInstantiate = GetRandomStarType();
-                    CreateNewStar(q, toInstantiate);
+                    CreateNewStar(q, 1, toInstantiate);
                 }
             }
         }
     }
 
-    Vector3 RandomPosition(int quadrant) {
+    Vector3 RandomPosition(int quadrant, int maxDeviation) {
         int randomIndex = Random.Range(0, locationsAvailable[quadrant].Count);
         KeyValuePair<int, int> coords = locationsAvailable[quadrant][randomIndex];
-        Vector3 randomPosition = GetRandomPositionFromCoords(coords, quadrant);
+        Vector3 randomPosition = GetRandomPositionFromCoords(coords, quadrant, maxDeviation);
 
         // For every quadrant surrounding the current quadrant, including the current quadrant, remove nearby stars.
         for (int qx = quadrantLocations[quadrant].Key - 1; qx <= quadrantLocations[quadrant].Key + 1; qx++) {
@@ -112,10 +113,10 @@ public class StarGenerator : MonoBehaviour {
         return randomPosition;
     }
 
-    Vector3 GetRandomPositionFromCoords(KeyValuePair<int, int> coords, int quadrant) {
+    Vector3 GetRandomPositionFromCoords(KeyValuePair<int, int> coords, int quadrant, int maxDeviation) {
         return new Vector3(
-            coords.Key   + (quadrantLocations[quadrant].Value * rows)  + GetRandomDeviation(1), // x
-            coords.Value + (quadrantLocations[quadrant].Key * columns) + GetRandomDeviation(1), // y
+            coords.Key   + (quadrantLocations[quadrant].Value * rows)  + GetRandomDeviation(maxDeviation), // x
+            coords.Value + (quadrantLocations[quadrant].Key * columns) + GetRandomDeviation(maxDeviation), // y
             quadrant // z, unused in 2D game, used for debug
         );
     }
@@ -196,8 +197,8 @@ public class StarGenerator : MonoBehaviour {
     }
 
     // Create a star at a random position and remove all possible positions surrounding it.
-    void CreateNewStar(int q, GameObject toInstantiate) {
-        GameObject instance = Instantiate(toInstantiate, RandomPosition(q), Quaternion.identity) as GameObject;
+    void CreateNewStar(int q, int maxDeviation, GameObject toInstantiate) {
+        GameObject instance = Instantiate(toInstantiate, RandomPosition(q, maxDeviation), Quaternion.identity) as GameObject;
         instance.transform.localScale = new Vector3(4f, 4f, 4f);
         instance.transform.SetParent(starmap);
         generatedStars.Add(instance);
