@@ -63,6 +63,7 @@ public class StarGenerator : MonoBehaviour {
             CreateNewStar(i, 0, stars[0]);
             generatedStars[i].transform.localScale = new Vector3(5f, 5f, 5f);
             generatedStars[i].transform.SetParent(homeworldParent);
+            generatedStars[i].GetComponent<StarProperties>().Generate(StarColor.YELLOW, true);
         }
         // TODO: Setup homeworld properties here.
     }
@@ -78,6 +79,7 @@ public class StarGenerator : MonoBehaviour {
                     hasCountChanged = true;
                     GameObject toInstantiate = GetRandomStarType();
                     CreateNewStar(q, 1, toInstantiate);
+                    generatedStars[generatedStars.Count - 1].GetComponent<StarProperties>().Generate(StarColor.YELLOW, false);
                 }
             }
         }
