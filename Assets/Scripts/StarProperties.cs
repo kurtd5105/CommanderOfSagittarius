@@ -10,6 +10,7 @@ public class StarProperties : MonoBehaviour {
     public float maxPopulation;
     public PlanetTypes planetType;
     public List<PlanetModifiers> planetModifiers;
+    public Owners owner;
 
     public void Generate(StarColor color, bool isHomeworld) {
         if (isHomeworld) {
@@ -27,5 +28,6 @@ public class StarProperties : MonoBehaviour {
             planetType = PlanetTypes.NONE;
             planetModifiers.Add(PlanetModifiers.NORMAL);
         }
+        owner = Owners.NONE;
     }
 }

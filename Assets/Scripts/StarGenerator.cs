@@ -5,6 +5,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class StarGenerator : MonoBehaviour {
+    // TODO: Make these get set based on player count/map size
     public const int homeworlds = 4;
     public const int quadrants = 4;
     public const int columns = 12;
@@ -21,16 +22,33 @@ public class StarGenerator : MonoBehaviour {
      * 6. White
      */
     public GameObject[] stars;
+
+    // Pairs containing all the owners and their race.
+    // TODO: Make these get set based on player choice + random chance for AI
+    public KeyValuePair<Owners, Races>[] activePlayers;
+
+    // List of all the generated stars.
     public List<GameObject> generatedStars;
 
+    // Parent transforms for generated stars.
     private Transform starmap;
     private Transform homeworldParent;
+
+    // Holds all remaining locations that a star can be placed in.
     private List<KeyValuePair<int, int>>[] locationsAvailable;
+
+    // Holds the coordinates of each quadrant.
     private KeyValuePair<int, int>[] quadrantLocations;
 
     void Initialize() {
-        starmap = new GameObject("Starmap").transform;
+        starmap =         new GameObject("Starmap").transform;
         homeworldParent = new GameObject("Homeworlds").transform;
+
+        activePlayers =    new KeyValuePair<Owners, Races>[homeworlds];
+        activePlayers[0] = new KeyValuePair<Owners, Races>(Owners.PLAYER, Races.HUMAN);
+        activePlayers[1] = new KeyValuePair<Owners, Races>(Owners.AI1, Races.CRYSTALS);
+        activePlayers[2] = new KeyValuePair<Owners, Races>(Owners.AI2, Races.CYBORG);
+        activePlayers[3] = new KeyValuePair<Owners, Races>(Owners.AI3, Races.LIZARDPEOPLE);
 
         InitializeLists();
     }
@@ -64,6 +82,7 @@ public class StarGenerator : MonoBehaviour {
             generatedStars[i].transform.localScale = new Vector3(5f, 5f, 5f);
             generatedStars[i].transform.SetParent(homeworldParent);
             generatedStars[i].GetComponent<StarProperties>().Generate(StarColor.YELLOW, true);
+            generatedStars[i].GetComponent<StarProperties>().owner = activePlayers[i].Key;
         }
         // TODO: Setup homeworld properties here.
     }
