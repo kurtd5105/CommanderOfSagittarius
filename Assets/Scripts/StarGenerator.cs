@@ -42,9 +42,7 @@ public class StarGenerator : MonoBehaviour {
     // Holds the coordinates of each quadrant.
     private KeyValuePair<int, int>[] quadrantLocations;
 
-    //Data for weighted random.
-    private int r = 0;
-    private KeyValuePair<StarColor, int>[] starWeights;
+    private RandomWeight<StarColor> starWeights;
 
     void Initialize() {
         starmap =         new GameObject("Starmap").transform;
@@ -65,7 +63,7 @@ public class StarGenerator : MonoBehaviour {
         starColorToGameObject.Add(StarColor.WHITE, stars[5]);
 
         // Generate and setup star weights.
-        setupWeight();
+        setupStarWeights();
 
         InitializeLists();
     }
@@ -214,40 +212,20 @@ public class StarGenerator : MonoBehaviour {
         }
     }
 
-    void setupWeight() {
-        // TODO: Convert to template.
-        starWeights = new KeyValuePair<StarColor, int>[startypes];
+    void setupStarWeights() {
+        starWeights = new RandomWeight<StarColor>();
 
         // 3 yellow + 4 red + 4 green + 3 blue + 1 purple + 1 white = 16
-        starWeights[0] = new KeyValuePair<StarColor, int>(StarColor.YELLOW, 3);
-        starWeights[1] = new KeyValuePair<StarColor, int>(StarColor.RED, 4);
-        starWeights[2] = new KeyValuePair<StarColor, int>(StarColor.GREEN, 4);
-        starWeights[3] = new KeyValuePair<StarColor, int>(StarColor.BLUE, 3);
-        starWeights[4] = new KeyValuePair<StarColor, int>(StarColor.PURPLE, 1);
-        starWeights[5] = new KeyValuePair<StarColor, int>(StarColor.WHITE, 1);
+        starWeights.AddWeight(StarColor.YELLOW, 3);
+        starWeights.AddWeight(StarColor.RED, 4);
+        starWeights.AddWeight(StarColor.GREEN, 4);
+        starWeights.AddWeight(StarColor.BLUE, 3);
+        starWeights.AddWeight(StarColor.PURPLE, 1);
+        starWeights.AddWeight(StarColor.WHITE, 1);
     }
 
     GameObject GetRandomStarType() {
-        int weight = 0;
-
-        foreach (KeyValuePair<StarColor, int> element in starWeights) {
-            weight += element.Value;
-        }
-
-        r = Random.Range(1, weight);
-
-        foreach (KeyValuePair<StarColor, int> element in starWeights)
-        {
-            if (r < element.Value) {
-                Debug.Log(element.Key);
-                return starColorToGameObject[element.Key];
-            }
-            r -= element.Value;
-        }
-
-        //Should never reach, make a Yellow Star
-        Debug.Assert(false);
-        return stars[0];
+        return starColorToGameObject[starWeights.GetRandomKey()];
     }
 
     // Create a star at a random position and remove all possible positions surrounding it.
