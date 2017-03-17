@@ -23,6 +23,7 @@ public class StarGenerator : MonoBehaviour {
      * 6. White
      */
     public GameObject[] stars;
+    public SortedDictionary<StarColor, GameObject> starColorToGameObject;
 
     // Pairs containing all the owners and their race.
     // TODO: Make these get set based on player choice + random chance for AI
@@ -42,7 +43,6 @@ public class StarGenerator : MonoBehaviour {
     private KeyValuePair<int, int>[] quadrantLocations;
 
     //Data for weighted random.
-    private int weight = 0;
     private int r = 0;
     private KeyValuePair<StarColor, int>[] starWeights;
 
@@ -55,6 +55,17 @@ public class StarGenerator : MonoBehaviour {
         activePlayers[1] = new KeyValuePair<Owners, Races>(Owners.AI1, Races.CRYSTALS);
         activePlayers[2] = new KeyValuePair<Owners, Races>(Owners.AI2, Races.CYBORG);
         activePlayers[3] = new KeyValuePair<Owners, Races>(Owners.AI3, Races.LIZARDPEOPLE);
+
+        starColorToGameObject = new SortedDictionary<StarColor, GameObject>();
+        starColorToGameObject.Add(StarColor.YELLOW, stars[0]);
+        starColorToGameObject.Add(StarColor.RED, stars[1]);
+        starColorToGameObject.Add(StarColor.GREEN, stars[2]);
+        starColorToGameObject.Add(StarColor.BLUE, stars[3]);
+        starColorToGameObject.Add(StarColor.PURPLE, stars[4]);
+        starColorToGameObject.Add(StarColor.WHITE, stars[5]);
+
+        // Generate and setup star weights.
+        setupWeight();
 
         InitializeLists();
     }
@@ -94,9 +105,6 @@ public class StarGenerator : MonoBehaviour {
     }
 
     void StarmapSetup() {
-        // Generate and setup star weights.
-        setupWeight();
-
         // Generates stars, one by one cycling through each quadrant.
         bool hasCountChanged = true;
         while (hasCountChanged) {
@@ -207,6 +215,7 @@ public class StarGenerator : MonoBehaviour {
     }
 
     void setupWeight() {
+        // TODO: Convert to template.
         starWeights = new KeyValuePair<StarColor, int>[startypes];
 
         // 3 yellow + 4 red + 4 green + 3 blue + 1 purple + 1 white = 16
@@ -216,7 +225,6 @@ public class StarGenerator : MonoBehaviour {
         starWeights[3] = new KeyValuePair<StarColor, int>(StarColor.BLUE, 3);
         starWeights[4] = new KeyValuePair<StarColor, int>(StarColor.PURPLE, 1);
         starWeights[5] = new KeyValuePair<StarColor, int>(StarColor.WHITE, 1);
-
     }
 
     GameObject GetRandomStarType() {
@@ -232,12 +240,13 @@ public class StarGenerator : MonoBehaviour {
         {
             if (r < element.Value) {
                 Debug.Log(element.Key);
-                return stars[(int)element.Key];
+                return starColorToGameObject[element.Key];
             }
             r -= element.Value;
         }
 
-        //Should never reach, make a White Star
+        //Should never reach, make a Yellow Star
+        Debug.Assert(false);
         return stars[0];
     }
 
@@ -252,7 +261,7 @@ public class StarGenerator : MonoBehaviour {
     public void SetupScene() {
         Initialize();
         SetupHomeworlds();
-        // TODO: Add Orion.
+        // TODO: Add Sagittarius.
         StarmapSetup();
     }
 }
