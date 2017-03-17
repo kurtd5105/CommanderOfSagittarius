@@ -11,8 +11,15 @@ public class StarSpending {
     public float reserves;
     public float maxPopulation;
     public float effectiveMaxPopulation;
-    public float EcoSpending { get; set; }
+
+    // Spending parameter to be set by the planet spending sliders.
+    public float ShipSpending { get; set; }
+    public float BaseSpending { get; set; }
     public float IndustrySpending { get; set; }
+    public float EcoSpending { get; set; }
+    public float ResearchSpending { get; set; }
+
+
     public float Production { get; set; }
     public float WasteProduction { get; set; }
 
