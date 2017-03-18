@@ -10,6 +10,9 @@ public class GameManager : MonoBehaviour {
     public StarGenerator generator = null;
     public GameObject ButtonManagerPrefab = null;
 
+    //public delegate void OnNextTurnClicked();
+    //public static event OnNextTurnClicked NextTurn;
+
     private Transform managers;
 
     void Awake() {

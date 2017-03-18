@@ -100,6 +100,7 @@ public class StarGenerator : MonoBehaviour {
             generatedStars[i].transform.SetParent(homeworldParent);
             generatedStars[i].GetComponent<StarProperties>().Generate(StarColor.YELLOW, true);
             generatedStars[i].GetComponent<StarProperties>().owner = activePlayers[i].Key;
+            ButtonManager.NextTurn += generatedStars[i].GetComponent<StarProperties>().Turn;
         }
         // TODO: Setup homeworld properties here.
     }
@@ -116,6 +117,7 @@ public class StarGenerator : MonoBehaviour {
                     GameObject toInstantiate = GetRandomStarType();
                     CreateNewStar(q, 1, toInstantiate);
                     generatedStars[generatedStars.Count - 1].GetComponent<StarProperties>().Generate(StarColor.YELLOW, false);
+                    ButtonManager.NextTurn += generatedStars[generatedStars.Count - 1].GetComponent<StarProperties>().Turn;
                 }
             }
         }
@@ -236,6 +238,12 @@ public class StarGenerator : MonoBehaviour {
         instance.transform.localScale = new Vector3(4f, 4f, 4f);
         instance.transform.SetParent(starmap);
         generatedStars.Add(instance);
+    }
+
+    private void OnDestroy() {
+        for (int i = 0; i < generatedStars.Count; i++) {
+            ButtonManager.NextTurn -= generatedStars[i].GetComponent<StarProperties>().Turn;
+        }
     }
 
     public void SetupScene() {

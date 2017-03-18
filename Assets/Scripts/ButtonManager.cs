@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class ButtonManager : MonoBehaviour {
+    public delegate void OnNextTurnClicked();
+    public static event OnNextTurnClicked NextTurn;
     public void SwitchScene(string newScene) {
         SceneManager.LoadScene(newScene);
     }
@@ -12,9 +14,7 @@ public class ButtonManager : MonoBehaviour {
         Application.Quit();
     }
 
-    public void SetupButtons(string name) {
-        if (name == "main") {
-            //Instantiate();
-        }
+    public void TurnClicked() {
+        NextTurn();
     }
 }
