@@ -6,8 +6,9 @@ using UnityEngine.Events;
 
 public class GameManager : MonoBehaviour {
     public static GameManager instance = null;
-    public StarGenerator generator;
-    public GameObject ButtonManager;
+    public static GameObject buttonManager = null;
+    public StarGenerator generator = null;
+    public GameObject ButtonManagerPrefab = null;
 
     private Transform managers;
 
@@ -24,9 +25,12 @@ public class GameManager : MonoBehaviour {
         SceneManager.sceneLoaded += SceneChanged;
 
         if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("main_menu")) {
-            managers = new GameObject("Managers").transform;
-            GameObject instance = Instantiate(ButtonManager, new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity) as GameObject;
-            instance.transform.SetParent(managers);
+            if (managers == null) {
+                managers = new GameObject("Managers").transform;
+                buttonManager = Instantiate(ButtonManagerPrefab, new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity) as GameObject;
+                buttonManager.transform.SetParent(managers);
+                DontDestroyOnLoad(managers);
+            }
         } else if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("main")) {
             generator = GetComponent<StarGenerator>();
             InitGame();
@@ -39,9 +43,12 @@ public class GameManager : MonoBehaviour {
         }
 
         if (scene == SceneManager.GetSceneByName("main_menu")) {
-            managers = new GameObject("Managers").transform;
-            GameObject instance = Instantiate(ButtonManager, new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity) as GameObject;
-            instance.transform.SetParent(managers);
+            if (managers == null) {
+                managers = new GameObject("Managers").transform;
+                buttonManager = Instantiate(ButtonManagerPrefab, new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity) as GameObject;
+                buttonManager.transform.SetParent(managers);
+                DontDestroyOnLoad(managers);
+            }
         }
         else if (scene == SceneManager.GetSceneByName("main")) {
             generator = GetComponent<StarGenerator>();

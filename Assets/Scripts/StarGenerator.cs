@@ -89,6 +89,8 @@ public class StarGenerator : MonoBehaviour {
                 }
             }
         }
+
+        generatedStars = new List<GameObject>();
     }
 
     void SetupHomeworlds() {
