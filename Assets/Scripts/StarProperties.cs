@@ -48,6 +48,7 @@ public class StarProperties : MonoBehaviour {
         spendingInfo.maxPopulation = maxPopulation;
         spendingInfo.effectiveMaxPopulation = effectiveMaxPopulation;
         spendingInfo.reserves = reserves;
+        spendingInfo.Init();
 }
 
     // TODO: Add this to a turn event. Unsubscribe if no owner or no planet. Subscribe if otherwise.
