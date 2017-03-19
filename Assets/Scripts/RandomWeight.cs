@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class RandomWeight<T> : MonoBehaviour {
+public class RandomWeight<T> {
     //Data for weighted random.
     private int totalWeight;
     private int r = 0;
