@@ -70,12 +70,12 @@ public class StarSpending {
         // TODO: Calculate effective max population based on waste.
 
         if (population > effectiveMaxPopulation) {
+            reserves += (population - effectiveMaxPopulation) * 20.0f;
             population = effectiveMaxPopulation;
-            reserves += (effectiveMaxPopulation - population) * 20.0f;
         }
         if (factories > population) {
-            factories = population;
             reserves += (factories - population) * 10.0f;
+            factories = population;
         }
 
         Production = ((int)population * 0.5f) + (int)factories;
