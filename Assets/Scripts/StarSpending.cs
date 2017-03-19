@@ -62,6 +62,8 @@ public class StarSpending {
         // Calculate industry spending.
         industrySpent = IndustrySpending * Production;
 
+        // Natural population growth. Starts out low, peaks at half, ends low.
+        population += (float)((-Math.Pow(20 * ((maxPopulation / 2.0f) - population) / maxPopulation, 2) + 100.0f) / 1000.0f + 0.01f) * population;
         population += populationSpent / 20.0f;
         factories += industrySpent / 10.0f;
 
