@@ -19,8 +19,10 @@ public class StarProperties : MonoBehaviour {
     public List<PlanetModifiers> planetModifiers;
     public Owners owner;
 
-    public void Generate(StarColor color, bool isHomeworld) {
+    public void InitAndGenerate(StarColor color, bool isHomeworld, Owners owner = Owners.NONE) {
         spendingInfo = new StarSpending();
+
+        // Generate a new planet based on the star color and if it's a homeworld or not.
         if (isHomeworld) {
             // TODO: These need to vary based on race and difficulty
             population = 50;
@@ -35,12 +37,13 @@ public class StarProperties : MonoBehaviour {
             planetType = PlanetTypes.NONE;
             planetModifiers.Add(PlanetModifiers.NORMAL);
         }
-        owner = Owners.NONE;
+        this.owner = owner;
         bases = 0;
         waste = 0;
         reserves = 0;
         effectiveMaxPopulation = maxPopulation;
 
+        // Init spending info.
         spendingInfo.population = population;
         spendingInfo.factories = factories;
         spendingInfo.waste = waste;
@@ -49,6 +52,8 @@ public class StarProperties : MonoBehaviour {
         spendingInfo.effectiveMaxPopulation = effectiveMaxPopulation;
         spendingInfo.reserves = reserves;
         spendingInfo.Init();
+
+        ButtonManager.NextTurn += Turn;
 }
 
     // TODO: Add this to a turn event. Unsubscribe if no owner or no planet. Subscribe if otherwise.
