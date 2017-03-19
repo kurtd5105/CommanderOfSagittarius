@@ -240,12 +240,6 @@ public class StarGenerator : MonoBehaviour {
         generatedStars.Add(instance);
     }
 
-    private void OnDestroy() {
-        for (int i = 0; i < generatedStars.Count; i++) {
-            ButtonManager.NextTurn -= generatedStars[i].GetComponent<StarProperties>().Turn;
-        }
-    }
-
     public void SetupScene() {
         Initialize();
         SetupHomeworlds();

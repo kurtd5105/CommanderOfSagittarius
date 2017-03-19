@@ -68,4 +68,8 @@ public class StarProperties : MonoBehaviour {
             effectiveMaxPopulation = spendingInfo.effectiveMaxPopulation;
         }
     }
+
+    private void OnDestroy() {
+        ButtonManager.NextTurn -= Turn;
+    }
 }
