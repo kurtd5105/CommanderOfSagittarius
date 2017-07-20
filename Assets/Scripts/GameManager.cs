@@ -7,11 +7,11 @@ using UnityEngine.Events;
 public class GameManager : MonoBehaviour {
     public static GameManager instance = null;
     public static GameObject buttonManager = null;
-    public GameObject infoPaneManager = null;
+    public GameObject uiManager = null;
 
     public StarGenerator generator = null;
     public GameObject ButtonManagerPrefab = null;
-    public GameObject InfoPaneManagerPrefab = null;
+    public GameObject UIManagerPrefab = null;
 
     private Transform managers;
 
@@ -37,8 +37,8 @@ public class GameManager : MonoBehaviour {
         } else if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("main")) {
             generator = GetComponent<StarGenerator>();
             InitGame();
-            infoPaneManager = Instantiate(InfoPaneManagerPrefab, new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity) as GameObject;
-            infoPaneManager.GetComponent<InfoPaneManager>().Init();
+            uiManager = Instantiate(UIManagerPrefab, new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity) as GameObject;
+            uiManager.GetComponent<UIManager>().Init();
         }
     }
 
@@ -58,10 +58,9 @@ public class GameManager : MonoBehaviour {
         else if (scene == SceneManager.GetSceneByName("main")) {
             generator = GetComponent<StarGenerator>();
             InitGame();
-            infoPaneManager = Instantiate(InfoPaneManagerPrefab, new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity) as GameObject;
-            infoPaneManager.GetComponent<InfoPaneManager>().Init();
+            uiManager = Instantiate(UIManagerPrefab, new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity) as GameObject;
+            uiManager.GetComponent<UIManager>().Init();
         }
-
     }
 
     void InitGame() {

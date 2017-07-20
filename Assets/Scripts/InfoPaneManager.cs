@@ -4,45 +4,34 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class InfoPaneManager : MonoBehaviour {
-    public GameObject starname;
-    public GameObject infoPaneText;
     public GameObject infoPane;
-    public GameObject infoPanePrefab;
-    public NumberDisplayText population;
-    public NumberDisplayText factories;
+    public GameObject buttonBar;
+
+    public GameObject InfoPanePrefab;
+    public GameObject ButtonBarPrefab;
 
     public void Init() {
-        infoPane = Instantiate(infoPanePrefab, new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity) as GameObject;
+        // Create the info pane. Positioning magic...
+        infoPane = Instantiate(InfoPanePrefab, new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity, transform.root) as GameObject;
+        RectTransform rt = infoPane.GetComponent<RectTransform>();
+        Vector3 position = rt.anchoredPosition3D;
 
-        population = new NumberDisplayText();
-        factories = new NumberDisplayText();
+        position.x = -rt.rect.width / 2.0f;
+        position.y = 0.0f;
+        rt.anchoredPosition = position;
+        rt.anchoredPosition3D = position;
 
-        // Get the RectTransform in order to position the text.
-        RectTransform rt = starname.GetComponent<RectTransform>();
-        TextGenerator textGen = new TextGenerator();
-        TextGenerationSettings generationSettings = starname.GetComponent<Text>().GetGenerationSettings(rt.rect.size);
-        float height = textGen.GetPreferredHeight("Name", generationSettings);
-        
-        population.text = Instantiate(infoPaneText, new Vector3(70.0f, 0.0f, 0.0f), Quaternion.identity, infoPane.transform) as GameObject;
-        factories.text = Instantiate(infoPaneText, new Vector3(70.0f, 0.0f, 0.0f), Quaternion.identity, infoPane.transform) as GameObject;
+        float topOffset = rt.offsetMax.y;
+        rt.offsetMax = new Vector2(rt.offsetMax.x, 0.0f);
+        rt.offsetMin = new Vector2(rt.offsetMin.x, rt.offsetMin.y - topOffset);
 
-        // Set correct positioning for the text.
-        Vector3 position = rt.anchoredPosition;
+        // Create the button bar.
+        buttonBar = Instantiate(ButtonBarPrefab, new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity, transform.root) as GameObject;
+        rt = buttonBar.GetComponent<RectTransform>();
+        RectTransform prefabRT = ButtonBarPrefab.GetComponent<RectTransform>();
 
-        // Move the text down by the planet name's height plus some extra padding.
-        position.y -= height + 5.0f;
-
-        // Set the population text's position.
-        population.text.GetComponent<RectTransform>().anchoredPosition = position;
-        population.text.GetComponent<RectTransform>().anchoredPosition3D = position;
-
-        position.y -= height + 5.0f;
-
-        // Set the factories text's position.
-        factories.text.GetComponent<RectTransform>().anchoredPosition = position;
-        factories.text.GetComponent<RectTransform>().anchoredPosition3D = position;
-
-        population.Init("Population", 0);
-        factories.Init("Factories", 0);
+        position = prefabRT.anchoredPosition3D;
+        rt.anchoredPosition = position;
+        rt.anchoredPosition3D = position;
     }
 }
