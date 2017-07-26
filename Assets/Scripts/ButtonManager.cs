@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 public class ButtonManager : MonoBehaviour {
     public delegate void OnNextTurnClicked();
     public static event OnNextTurnClicked NextTurn;
+    public delegate void OnNextTurnDone();
+    public static event OnNextTurnDone NextTurnDone;
     public void SwitchScene(string newScene) {
         SceneManager.LoadScene(newScene);
     }
@@ -16,5 +18,6 @@ public class ButtonManager : MonoBehaviour {
 
     public void TurnClicked() {
         NextTurn();
+        NextTurnDone();
     }
 }

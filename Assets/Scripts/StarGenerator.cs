@@ -94,17 +94,20 @@ public class StarGenerator : MonoBehaviour {
     }
 
     void SetupHomeworlds() {
+        InfoPaneManager infoPane = GameObject.Find("UIManager").GetComponent<UIManager>().InfoPaneManager.GetComponent<InfoPaneManager>();
         for (int i = 0; i < homeworlds; i++) {
             CreateNewStar(i, 0, stars[0]);
             generatedStars[i].transform.localScale = new Vector3(5f, 5f, 5f);
             generatedStars[i].transform.SetParent(homeworldParent);
-            generatedStars[i].GetComponent<StarProperties>().InitAndGenerate(StarColor.YELLOW, true, activePlayers[i].Key);
+            generatedStars[i].GetComponent<StarProperties>().InitAndGenerate(infoPane, StarColor.YELLOW, true, activePlayers[i].Key);
         }
     }
 
     void StarmapSetup() {
-        // Generates stars, one by one cycling through each quadrant.
+        InfoPaneManager infoPane = GameObject.Find("UIManager").GetComponent<UIManager>().InfoPaneManager.GetComponent<InfoPaneManager>();
         bool hasCountChanged = true;
+
+        // Generates stars, one by one cycling through each quadrant.
         while (hasCountChanged) {
             hasCountChanged = false;
 
@@ -113,7 +116,7 @@ public class StarGenerator : MonoBehaviour {
                     hasCountChanged = true;
                     GameObject toInstantiate = GetRandomStarType();
                     CreateNewStar(q, 1, toInstantiate);
-                    generatedStars[generatedStars.Count - 1].GetComponent<StarProperties>().InitAndGenerate(StarColor.YELLOW, false);
+                    generatedStars[generatedStars.Count - 1].GetComponent<StarProperties>().InitAndGenerate(infoPane, StarColor.YELLOW, false);
                 }
             }
         }

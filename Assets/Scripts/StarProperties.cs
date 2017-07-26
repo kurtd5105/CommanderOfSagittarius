@@ -19,7 +19,9 @@ public class StarProperties : MonoBehaviour {
     public List<PlanetModifiers> planetModifiers;
     public Owners owner;
 
-    public void InitAndGenerate(StarColor color, bool isHomeworld, Owners owner = Owners.NONE) {
+    private InfoPaneManager InfoPane;
+
+    public void InitAndGenerate(InfoPaneManager infoPane, StarColor color, bool isHomeworld, Owners owner = Owners.NONE) {
         spendingInfo = new StarSpending();
 
         // Generate a new planet based on the star color and if it's a homeworld or not.
@@ -54,6 +56,8 @@ public class StarProperties : MonoBehaviour {
         spendingInfo.Init();
 
         ButtonManager.NextTurn += Turn;
+
+        InfoPane = infoPane;
 }
 
     // TODO: Add this to a turn event. Unsubscribe if no owner or no planet. Subscribe if otherwise.
@@ -76,5 +80,10 @@ public class StarProperties : MonoBehaviour {
 
     private void OnDestroy() {
         ButtonManager.NextTurn -= Turn;
+    }
+
+    void OnMouseDown() {
+        Debug.Log("button clicked");
+        InfoPane.OnStarClicked(this);
     }
 }
