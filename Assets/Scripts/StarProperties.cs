@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class StarProperties : MonoBehaviour {
     // Current owner specifics, temporary for debug info.
+    public string starName;
     public float population;
     public float factories;
     public float waste;
@@ -18,6 +19,9 @@ public class StarProperties : MonoBehaviour {
     public PlanetTypes planetType;
     public List<PlanetModifiers> planetModifiers;
     public Owners owner;
+
+    // Sliders
+    public Dictionary<string, float> slideVal = new Dictionary<string, float>();
 
     private InfoPaneManager InfoPane;
 
@@ -45,6 +49,12 @@ public class StarProperties : MonoBehaviour {
         reserves = 0;
         effectiveMaxPopulation = maxPopulation;
 
+        slideVal.Add("Shp", 0.5f);
+        slideVal.Add("Def", 0.5f);
+        slideVal.Add("Ind", 0.5f);
+        slideVal.Add("Eco", 0.5f);
+        slideVal.Add("Res", 0.5f);
+
         // Init spending info.
         spendingInfo.population = population;
         spendingInfo.factories = factories;
@@ -59,6 +69,10 @@ public class StarProperties : MonoBehaviour {
 
         InfoPane = infoPane;
 }
+
+    public void UpdateSlider(string name, float value) {
+        slideVal[name] += value;
+    }
 
     // TODO: Add this to a turn event. Unsubscribe if no owner or no planet. Subscribe if otherwise.
     public void Turn() {
