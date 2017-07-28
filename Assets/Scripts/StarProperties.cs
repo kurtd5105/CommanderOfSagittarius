@@ -49,12 +49,6 @@ public class StarProperties : MonoBehaviour {
         reserves = 0;
         effectiveMaxPopulation = maxPopulation;
 
-        slideVal.Add("Shp", 0.5f);
-        slideVal.Add("Def", 0.5f);
-        slideVal.Add("Ind", 0.5f);
-        slideVal.Add("Eco", 0.5f);
-        slideVal.Add("Res", 0.5f);
-
         // Init spending info.
         spendingInfo.population = population;
         spendingInfo.factories = factories;
@@ -64,6 +58,13 @@ public class StarProperties : MonoBehaviour {
         spendingInfo.effectiveMaxPopulation = effectiveMaxPopulation;
         spendingInfo.reserves = reserves;
         spendingInfo.Init();
+
+        // Init slider values.
+        slideVal.Add("Shp", spendingInfo.ShipSpending * 1);
+        slideVal.Add("Def", spendingInfo.BaseSpending * 1);
+        slideVal.Add("Ind", spendingInfo.IndustrySpending * 1);
+        slideVal.Add("Eco", spendingInfo.EcoSpending * 1);
+        slideVal.Add("Res", spendingInfo.ResearchSpending * 1);
 
         ButtonManager.NextTurn += Turn;
 
