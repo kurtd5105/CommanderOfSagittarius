@@ -38,29 +38,29 @@ public class InfoPaneManager : MonoBehaviour {
 
     public void InitButtons() {
         ShpLeft = (GameObject.Find("SHP_Arrow_Left")).GetComponent<Button>();
-        ShpLeft.onClick.AddListener(() => UpdateSlider("Shp", -0.1f));
+        ShpLeft.onClick.AddListener(() => UpdateSlider("ship", -0.1f));
         ShpRight = (GameObject.Find("SHP_Arrow_Right")).GetComponent<Button>();
-        ShpRight.onClick.AddListener(() => UpdateSlider("Shp", 0.1f));
+        ShpRight.onClick.AddListener(() => UpdateSlider("ship", 0.1f));
 
         DefLeft = (GameObject.Find("DEF_Arrow_Left")).GetComponent<Button>();
-        DefLeft.onClick.AddListener(() => UpdateSlider("Def", -0.1f));
+        DefLeft.onClick.AddListener(() => UpdateSlider("defense", -0.1f));
         DefRight = (GameObject.Find("DEF_Arrow_Right")).GetComponent<Button>();
-        DefRight.onClick.AddListener(() => UpdateSlider("Def", 0.1f));
+        DefRight.onClick.AddListener(() => UpdateSlider("defense", 0.1f));
 
         IndLeft = (GameObject.Find("IND_Arrow_Left")).GetComponent<Button>();
-        IndLeft.onClick.AddListener(() => UpdateSlider("Ind", -0.1f));
+        IndLeft.onClick.AddListener(() => UpdateSlider("industry", -0.1f));
         IndRight = (GameObject.Find("IND_Arrow_Right")).GetComponent<Button>();
-        IndRight.onClick.AddListener(() => UpdateSlider("Ind", 0.1f));
+        IndRight.onClick.AddListener(() => UpdateSlider("industry", 0.1f));
 
         EcoLeft = (GameObject.Find("ECO_Arrow_Left")).GetComponent<Button>();
-        EcoLeft.onClick.AddListener(() => UpdateSlider("Eco", -0.1f));
+        EcoLeft.onClick.AddListener(() => UpdateSlider("ecology", -0.1f));
         EcoRight = (GameObject.Find("ECO_Arrow_Right")).GetComponent<Button>();
-        EcoRight.onClick.AddListener(() => UpdateSlider("Eco", 0.1f));
+        EcoRight.onClick.AddListener(() => UpdateSlider("ecology", 0.1f));
 
         ResLeft = (GameObject.Find("RES_Arrow_Left")).GetComponent<Button>();
-        ResLeft.onClick.AddListener(() => UpdateSlider("Res", -0.1f));
+        ResLeft.onClick.AddListener(() => UpdateSlider("research", -0.1f));
         ResRight = (GameObject.Find("RES_Arrow_Right")).GetComponent<Button>();
-        ResRight.onClick.AddListener(() => UpdateSlider("Res", 0.1f));
+        ResRight.onClick.AddListener(() => UpdateSlider("research", 0.1f));
 
         SHPBar = (GameObject.Find("SHP_Bar")).GetComponent<Image>();
         DEFBar = (GameObject.Find("DEF_Bar")).GetComponent<Image>();
@@ -79,7 +79,7 @@ public class InfoPaneManager : MonoBehaviour {
     }
 
     public void UpdateSlider(string name, float value) {
-        currentStar.UpdateSlider(name, value);
+        currentStar.UpdateSpending(name, value);
         UpdatePane();
     }
 
@@ -92,11 +92,11 @@ public class InfoPaneManager : MonoBehaviour {
         Bases.text = currentStar.population.ToString("##0");
         Production.text = production;
 
-        SHPBar.fillAmount = currentStar.slideVal["Shp"];
-        DEFBar.fillAmount = currentStar.slideVal["Def"];
-        INDBar.fillAmount = currentStar.slideVal["Ind"];
-        ECOBar.fillAmount = currentStar.slideVal["Eco"];
-        RESBar.fillAmount = currentStar.slideVal["Res"];
+        SHPBar.fillAmount = currentStar.GetSpending("ship");
+        DEFBar.fillAmount = currentStar.GetSpending("defense");
+        INDBar.fillAmount = currentStar.GetSpending("industry");
+        ECOBar.fillAmount = currentStar.GetSpending("ecology");
+        RESBar.fillAmount = currentStar.GetSpending("research");
     }
 
     private void OnDestroy() {

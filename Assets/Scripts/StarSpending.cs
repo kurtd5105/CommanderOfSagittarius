@@ -15,52 +15,49 @@ public class StarSpending {
     public float effectiveMaxPopulation;
 
     // Spending parameter to be set by the planet spending sliders.
-    public float ShipSpending     { get; set; } // in % of production
-    public float BaseSpending     { get; set; } // in % of production
-    public float IndustrySpending { get; set; } // in % of production
-    public float EcoSpending      { get; set; } // in % of production
-    public float ResearchSpending { get; set; } // in % of production
-
 
     public float Production      { get; set; } // in BC
     public float WasteProduction { get; set; } // in BC
 
+    public Dictionary<string, float> SpendingBook = new Dictionary<string, float>();
+
     public void Init() {
-        ShipSpending     = 0.0f;
-        BaseSpending     = 0.0f;
-        IndustrySpending = 0.0f;
-        EcoSpending      = 0.0f;
-        ResearchSpending = 0.0f;
+        SpendingBook.Add("ship", 0.0f);
+        SpendingBook.Add("defense", 0.0f);
+        SpendingBook.Add("industry", 0.0f);
+        SpendingBook.Add("ecology", 0.0f);
+        SpendingBook.Add("research", 0.0f);
+
         Production = ((int)population * 0.5f) + (int)factories;
         WasteProduction = (int)factories;
         // TODO: if the slider isn't locked, round to the nearest unit of 5.
 
-        if ((WasteProduction / 2) > EcoSpending * Production) {
-            EcoSpending = ((WasteProduction / 2) / Production);
+        if ((WasteProduction / 2) > SpendingBook["ecology"] * Production) {
+            SpendingBook["ecology"] = ((WasteProduction / 2) / Production);
         }
-        IndustrySpending = 1.0f - EcoSpending;
+        SpendingBook["industry"] = 1.0f - SpendingBook["ecology"];
     }
 
     public void Calculate() {
         float populationSpent = 0.0f;
         float industrySpent = 0.0f;
         // Calculate cleanup of generated waste + existing waste, and spending into population growth.
-        if (EcoSpending * Production > WasteProduction / 2) {
-            float ecoRemainder = (EcoSpending * Production) - (WasteProduction / 2);
+        if (SpendingBook["ecology"] * Production > WasteProduction / 2) {
+            float ecoRemainder = (SpendingBook["ecology"] * Production) - (WasteProduction / 2);
 
             if (waste / 2 - ecoRemainder < 0) {
                 ecoRemainder -= waste / 2;
                 waste = 0.0f;
                 populationSpent += ecoRemainder;
             } else {
-                waste -= EcoSpending * Production * 2;
+                waste -= SpendingBook["ecology"] * Production * 2;
             }
         } else {
-            waste += (WasteProduction / 2) - (EcoSpending * Production);
+            waste += (WasteProduction / 2) - (SpendingBook["ecology"] * Production);
         }
 
         // Calculate industry spending.
-        industrySpent = IndustrySpending * Production;
+        industrySpent = SpendingBook["industry"] * Production;
 
         // Natural population growth. Starts out low, peaks at half, ends low.
         population += (float)((-Math.Pow(20 * ((maxPopulation / 2.0f) - population) / maxPopulation, 2) + 100.0f) / 1000.0f + 0.01f) * population;
@@ -82,10 +79,10 @@ public class StarSpending {
         WasteProduction = (int)factories;
         // TODO: if the slider isn't locked, round to the nearest unit of 5.
 
-        if ((WasteProduction / 2) > EcoSpending * Production) {
-            EcoSpending = ((WasteProduction / 2) / Production);
+        if ((WasteProduction / 2) > SpendingBook["ecology"] * Production) {
+            SpendingBook["ecology"] = ((WasteProduction / 2) / Production);
         }
 
-        IndustrySpending = 1.0f - EcoSpending;
+        SpendingBook["industry"] = 1.0f - SpendingBook["ecology"];
     }
 }

@@ -20,9 +20,6 @@ public class StarProperties : MonoBehaviour {
     public List<PlanetModifiers> planetModifiers;
     public Owners owner;
 
-    // Sliders
-    public Dictionary<string, float> slideVal = new Dictionary<string, float>();
-
     private InfoPaneManager InfoPane;
 
     public void InitAndGenerate(InfoPaneManager infoPane, StarColor color, bool isHomeworld, Owners owner = Owners.NONE) {
@@ -59,20 +56,17 @@ public class StarProperties : MonoBehaviour {
         spendingInfo.reserves = reserves;
         spendingInfo.Init();
 
-        // Init slider values.
-        slideVal.Add("Shp", spendingInfo.ShipSpending * 1);
-        slideVal.Add("Def", spendingInfo.BaseSpending * 1);
-        slideVal.Add("Ind", spendingInfo.IndustrySpending * 1);
-        slideVal.Add("Eco", spendingInfo.EcoSpending * 1);
-        slideVal.Add("Res", spendingInfo.ResearchSpending * 1);
-
         ButtonManager.NextTurn += Turn;
 
         InfoPane = infoPane;
 }
 
-    public void UpdateSlider(string name, float value) {
-        slideVal[name] += value;
+    public void UpdateSpending(string name, float value) {
+        spendingInfo.SpendingBook[name] += value;
+    }
+
+    public float GetSpending(string name) {
+        return spendingInfo.SpendingBook[name];
     }
 
     // TODO: Add this to a turn event. Unsubscribe if no owner or no planet. Subscribe if otherwise.
