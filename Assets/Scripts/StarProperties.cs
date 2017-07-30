@@ -62,7 +62,7 @@ public class StarProperties : MonoBehaviour {
 }
 
     public void UpdateSpending(string name, float value) {
-        spendingInfo.SpendingBook[name] += value;
+        spendingInfo.calcSpending(name, value);
     }
 
     public float GetSpending(string name) {

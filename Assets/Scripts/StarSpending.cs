@@ -38,6 +38,16 @@ public class StarSpending {
         SpendingBook["industry"] = 1.0f - SpendingBook["ecology"];
     }
 
+    public void calcSpending(string name, float value) {
+        //Prevent value of Spending from going out of 0 <= value <= 1 range.
+        if (SpendingBook[name] > 0.01f && SpendingBook[name] < 1.0f) {
+            SpendingBook[name] += value;
+        }
+        if ((SpendingBook[name] <= 0.09f && value > 0.0f) || (SpendingBook[name] >= 0.91 && value < 0.0f)) {
+            SpendingBook[name] += value;
+        }
+    }
+
     public void Calculate() {
         float populationSpent = 0.0f;
         float industrySpent = 0.0f;
