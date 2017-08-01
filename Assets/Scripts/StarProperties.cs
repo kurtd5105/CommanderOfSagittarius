@@ -61,8 +61,12 @@ public class StarProperties : MonoBehaviour {
         InfoPane = infoPane;
 }
 
-    public void UpdateSpending(string name, float value) {
-        spendingInfo.calcSpending(name, value);
+    public void UpdateSpending(string name, float value, string element) {
+        if (element == "arrow") {
+            spendingInfo.calcSpending(name, value);
+        } else {
+            spendingInfo.SpendingBook[name] = value;
+        }
     }
 
     public float GetSpending(string name) {
