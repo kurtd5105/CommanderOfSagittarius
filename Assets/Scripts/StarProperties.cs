@@ -62,11 +62,10 @@ public class StarProperties : MonoBehaviour {
 }
 
     public void UpdateSpending(string name, float value, string element) {
-        if (element == "arrow") {
-            spendingInfo.calcSpending(name, value);
-        } else {
-            spendingInfo.SpendingBook[name] = value;
+        if (element == "slider") {
+            value -= spendingInfo.SpendingBook[name];
         }
+        spendingInfo.calcSpending(name, value);
     }
 
     public float GetSpending(string name) {

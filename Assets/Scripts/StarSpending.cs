@@ -21,12 +21,12 @@ public class StarSpending {
 
     public Dictionary<string, float> SpendingBook = new Dictionary<string, float>();
 
+    public static string[] SpendingCategories = new string[5] { "ship", "defense", "industry", "ecology", "research" };
+
     public void Init() {
-        SpendingBook.Add("ship", 0.0f);
-        SpendingBook.Add("defense", 0.0f);
-        SpendingBook.Add("industry", 0.0f);
-        SpendingBook.Add("ecology", 0.0f);
-        SpendingBook.Add("research", 0.0f);
+        foreach (var category in SpendingCategories) {
+            SpendingBook.Add(category, 0.0f);
+        }
 
         Production = ((int)population * 0.5f) + (int)factories;
         WasteProduction = (int)factories;
@@ -40,11 +40,47 @@ public class StarSpending {
 
     public void calcSpending(string name, float value) {
         //Prevent value of Spending from going out of 0 <= value <= 1 range.
-        if (SpendingBook[name] > 0.01f && SpendingBook[name] < 1.0f) {
-            SpendingBook[name] += value;
+        float oldValue = SpendingBook[name];
+        SpendingBook[name] += value;
+        if (SpendingBook[name] > 1.0f) {
+            SpendingBook[name] = 1.0f;
+        } else if (SpendingBook[name] < 0.0f) {
+            SpendingBook[name] = 0.0f;
         }
-        if ((SpendingBook[name] <= 0.09f && value > 0.0f) || (SpendingBook[name] >= 0.91 && value < 0.0f)) {
-            SpendingBook[name] += value;
+
+        BalanceSpending(name, SpendingBook[name] - oldValue);
+
+        //if (SpendingBook[name] > 0.01f && SpendingBook[name] < 1.0f) {
+        //    SpendingBook[name] += value;
+        //}
+        //if ((SpendingBook[name] <= 0.09f && value > 0.0f) || (SpendingBook[name] >= 0.91 && value < 0.0f)) {
+        //    SpendingBook[name] += value;
+        //}
+    }
+
+    private void BalanceSpending(string to, float amount) {
+        for (int i = SpendingCategories.Length - 1; i >= 0; i--) {
+            if (SpendingCategories[i] == to) {
+                continue;
+            }
+
+            if (amount > 0) {
+                if (SpendingBook[SpendingCategories[i]] >= amount) {
+                    SpendingBook[SpendingCategories[i]] -= amount;
+                    break;
+                } else {
+                    amount -= SpendingBook[SpendingCategories[i]];
+                    SpendingBook[SpendingCategories[i]] = 0.0f;
+                }
+            } else {
+                if (SpendingBook[SpendingCategories[i]] - amount <= 1.0f) {
+                    SpendingBook[SpendingCategories[i]] -= amount;
+                    break;
+                } else {
+                    amount += 1.0f - SpendingBook[SpendingCategories[i]];
+                    SpendingBook[SpendingCategories[i]] = 1.0f;
+                }
+            }
         }
     }
 
