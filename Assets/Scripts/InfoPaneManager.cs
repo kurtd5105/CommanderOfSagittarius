@@ -25,11 +25,11 @@ public class InfoPaneManager : MonoBehaviour {
     public Button ResLeft;
     public Button ResRight;
 
-    public JumpSlider SHPBar;
-    public JumpSlider DEFBar;
-    public JumpSlider INDBar;
-    public JumpSlider ECOBar;
-    public JumpSlider RESBar;
+    public Slider SHPBar;
+    public Slider DEFBar;
+    public Slider INDBar;
+    public Slider ECOBar;
+    public Slider RESBar;
 
     public void Init() {
         ButtonManager.NextTurnDone += TurnDone;
@@ -62,15 +62,15 @@ public class InfoPaneManager : MonoBehaviour {
         ResRight = (GameObject.Find("RES_Arrow_Right")).GetComponent<Button>();
         ResRight.onClick.AddListener(() => UpdateSlider("research", 0.1f, "arrow"));
 
-        SHPBar = (JumpSlider)GameObject.Find("SHP_BAR").GetComponent<JumpSlider>();
+        SHPBar = GameObject.Find("SHP_BAR").GetComponent<Slider>();
         SHPBar.onValueChanged.AddListener(delegate { UpdateSlider("ship", SHPBar.value, "slider"); });
-        DEFBar = (JumpSlider)GameObject.Find("DEF_BAR").GetComponent<JumpSlider>();
+        DEFBar = GameObject.Find("DEF_BAR").GetComponent<Slider>();
         DEFBar.onValueChanged.AddListener(delegate { UpdateSlider("defense", DEFBar.value, "slider"); });
-        INDBar = (JumpSlider)GameObject.Find("IND_BAR").GetComponent<JumpSlider>();
+        INDBar = GameObject.Find("IND_BAR").GetComponent<Slider>();
         INDBar.onValueChanged.AddListener(delegate { UpdateSlider("industry", INDBar.value, "slider"); });
-        ECOBar = (JumpSlider)GameObject.Find("ECO_BAR").GetComponent<JumpSlider>();
+        ECOBar = GameObject.Find("ECO_BAR").GetComponent<Slider>();
         ECOBar.onValueChanged.AddListener(delegate { UpdateSlider("ecology", ECOBar.value, "slider"); });
-        RESBar = (JumpSlider)GameObject.Find("RES_BAR").GetComponent<JumpSlider>();
+        RESBar = GameObject.Find("RES_BAR").GetComponent<Slider>();
         RESBar.onValueChanged.AddListener(delegate { UpdateSlider("research", RESBar.value, "slider"); });
         SHPBar.enabled = false;
         DEFBar.enabled = false;
