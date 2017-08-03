@@ -9,6 +9,14 @@ public class JumpSlider : Slider {
 	// Use this for initialization
 	public override void OnPointerDown(PointerEventData eventData) {
         base.OnPointerDown(eventData);
-        Debug.Log(eventData.pressPosition.x);
+
+        Vector2 clickOnSlider;
+        bool res = RectTransformUtility.ScreenPointToLocalPointInRectangle(GetComponent<RectTransform>(), eventData.position, eventData.pressEventCamera, out clickOnSlider);
+
+        if (res) {
+            Debug.Log(clickOnSlider.x);
+        } else {
+            Debug.Log("Transform failed.");
+        }
     }
 }
