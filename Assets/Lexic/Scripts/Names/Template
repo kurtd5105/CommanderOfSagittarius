@@ -1,0 +1,25 @@
+﻿using System.Collections.Generic;
+
+namespace NameGen
+{
+    public class CustomName : BaseNames
+    {
+        private static Dictionary<string, List<string>> syllableSets = new Dictionary<string, List<string>>()
+            {
+                {
+                    "TokenName",    new List<string>(){
+                                                    "Custom tokens go here",
+                                                    }
+                },
+            };
+
+        private static List<string> rules = new List<string>()
+            {
+                "Custom rules go here",
+            };
+
+        public new static List<string> GetSyllableSet(string key) { return syllableSets[key]; }
+
+        public new static List<string> GetRules() { return rules; }   
+    }
+}

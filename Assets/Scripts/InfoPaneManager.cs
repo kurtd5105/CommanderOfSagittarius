@@ -100,9 +100,11 @@ public class InfoPaneManager : MonoBehaviour {
 
     public void UpdatePane() {
         if (currentStar != null) {
+            string name = currentStar.starName;
             string maxPop = "MAX POP " + currentStar.effectiveMaxPopulation.ToString("##0");
             string production = currentStar.factories.ToString("###0") + " (RAW " + currentStar.factories.ToString("###0") + ")";
 
+            Name.text = name;
             MaxPop.text = maxPop;
             Population.text = currentStar.population.ToString("##0");
             Bases.text = currentStar.population.ToString("##0");

@@ -44,6 +44,9 @@ public class StarGenerator : MonoBehaviour {
 
     private RandomWeight<StarColor> starWeights;
 
+    // Name generation setup
+    public Lexic.NameGenerator namegen;
+
     void Initialize() {
         starmap =         new GameObject("Starmap").transform;
         homeworldParent = new GameObject("Homeworlds").transform;
@@ -66,6 +69,9 @@ public class StarGenerator : MonoBehaviour {
         setupStarWeights();
 
         InitializeLists();
+
+        // Set source class for name generation.
+        namegen = GameObject.Find("NameGen").GetComponent<Lexic.NameGenerator>();
     }
     void InitializeLists() {
         // TODO: change fixed square size.
@@ -236,6 +242,8 @@ public class StarGenerator : MonoBehaviour {
         GameObject instance = Instantiate(toInstantiate, RandomPosition(q, maxDeviation), Quaternion.identity) as GameObject;
         instance.transform.localScale = new Vector3(4f, 4f, 4f);
         instance.transform.SetParent(starmap);
+        instance.GetComponent<StarProperties>().starName = namegen.GetNextRandomName();
+        Debug.Log(namegen.GetNextRandomName());
         generatedStars.Add(instance);
     }
 
