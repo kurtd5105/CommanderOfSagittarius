@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class StarProperties : MonoBehaviour {
@@ -19,6 +20,7 @@ public class StarProperties : MonoBehaviour {
     public PlanetTypes planetType;
     public List<PlanetModifiers> planetModifiers;
     public Owners owner;
+    public Dictionary<Owners, bool> isExplored;
 
     private InfoPaneManager InfoPane;
 
@@ -55,6 +57,15 @@ public class StarProperties : MonoBehaviour {
         spendingInfo.effectiveMaxPopulation = effectiveMaxPopulation;
         spendingInfo.reserves = reserves;
         spendingInfo.Init();
+
+        isExplored = new Dictionary<Owners, bool>();
+        foreach (var player in System.Enum.GetValues(typeof(Owners)).Cast<Owners>()) {
+            isExplored[player] = false;
+        }
+
+        if (this.owner != Owners.NONE) {
+            isExplored[this.owner] = true;
+        }
 
         ButtonManager.NextTurn += Turn;
 

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class InfoPaneManager : MonoBehaviour {
 
     public GameObject infoPane;
-    public StarProperties currentStar;
+    public StarProperties currentStar = null;
 
     public Text Name;
     public Text MaxPop;
@@ -32,9 +32,13 @@ public class InfoPaneManager : MonoBehaviour {
     public Slider ECOBar;
     public Slider RESBar;
 
+    bool DetailPlateVisible;
+    bool StatsPlateVisible;
+
     public void Init() {
         ButtonManager.NextTurnDone += TurnDone;
         InitButtons();
+        UpdatePane();
     }
 
     public void InitButtons() {
@@ -95,19 +99,24 @@ public class InfoPaneManager : MonoBehaviour {
     }
 
     public void UpdatePane() {
-        string maxPop = "MAX POP " + currentStar.effectiveMaxPopulation.ToString("##0");
-        string production = currentStar.factories.ToString("###0") + " (RAW " + currentStar.factories.ToString("###0") + ")";
+        if (currentStar != null) {
+            string maxPop = "MAX POP " + currentStar.effectiveMaxPopulation.ToString("##0");
+            string production = currentStar.factories.ToString("###0") + " (RAW " + currentStar.factories.ToString("###0") + ")";
 
-        MaxPop.text = maxPop;
-        Population.text = currentStar.population.ToString("##0");
-        Bases.text = currentStar.population.ToString("##0");
-        Production.text = production;
+            MaxPop.text = maxPop;
+            Population.text = currentStar.population.ToString("##0");
+            Bases.text = currentStar.population.ToString("##0");
+            Production.text = production;
 
-        SHPBar.value = currentStar.GetSpending("ship");
-        DEFBar.value = currentStar.GetSpending("defense");
-        INDBar.value = currentStar.GetSpending("industry");
-        ECOBar.value = currentStar.GetSpending("ecology");
-        RESBar.value = currentStar.GetSpending("research");
+            SHPBar.value = currentStar.GetSpending("ship");
+            DEFBar.value = currentStar.GetSpending("defense");
+            INDBar.value = currentStar.GetSpending("industry");
+            ECOBar.value = currentStar.GetSpending("ecology");
+            RESBar.value = currentStar.GetSpending("research");
+        }
+
+        UpdateDetailPlate();
+        UpdateStatsPlate();
     }
 
     private void EnableSliders(bool enable) {
@@ -116,6 +125,27 @@ public class InfoPaneManager : MonoBehaviour {
         INDBar.enabled = enable;
         ECOBar.enabled = enable;
         RESBar.enabled = enable;
+    }
+
+    // Detail plate appears just below the star name.
+    private void UpdateDetailPlate() {
+        bool enablePlanetInfo = false;
+
+        if (currentStar != null) {
+            if (currentStar.owner == Owners.PLAYER || currentStar.isExplored[Owners.PLAYER]) {
+                enablePlanetInfo = true;
+            }
+        }
+
+        // Hide or show detail plate based on if details should be shown or not.
+        GameObject.Find("PlanetTypeText").GetComponent<Text>().enabled = enablePlanetInfo;
+        GameObject.Find("MaxPopText").GetComponent<Text>().enabled = enablePlanetInfo;
+        GameObject.Find("UnexploredText").GetComponent<Text>().enabled = !enablePlanetInfo;
+    }
+
+    // Stats plate appears below the detail plate, if at all.
+    private void UpdateStatsPlate() {
+        
     }
 
     private void OnDestroy() {
