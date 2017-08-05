@@ -14,26 +14,13 @@ public class InfoPaneManager : MonoBehaviour {
     public Text Production;
     public Text Bases;
 
-    public Button ShpLeft;
-    public Button DefLeft;
-    public Button IndLeft;
-    public Button EcoLeft;
-    public Button ResLeft;
+    public InfoPaneSlider SHPBar;
+    public InfoPaneSlider DEFBar;
+    public InfoPaneSlider INDBar;
+    public InfoPaneSlider ECOBar;
+    public InfoPaneSlider RESBar;
 
-    public Button ShpRight;
-    public Button DefRight;
-    public Button IndRight;
-    public Button EcoRight;
-    public Button ResRight;
-
-    public Slider SHPBar;
-    public Slider DEFBar;
-    public Slider INDBar;
-    public Slider ECOBar;
-    public Slider RESBar;
-
-    bool DetailPlateVisible;
-    bool StatsPlateVisible;
+    public CanvasGroup SliderGroup;
 
     public void Init() {
         ButtonManager.NextTurnDone += TurnDone;
@@ -42,49 +29,24 @@ public class InfoPaneManager : MonoBehaviour {
     }
 
     public void InitButtons() {
-        ShpLeft = (GameObject.Find("SHP_Arrow_Left")).GetComponent<Button>();
-        DefLeft = (GameObject.Find("DEF_Arrow_Left")).GetComponent<Button>();
-        IndLeft = (GameObject.Find("IND_Arrow_Left")).GetComponent<Button>();
-        EcoLeft = (GameObject.Find("ECO_Arrow_Left")).GetComponent<Button>();
-        ResLeft = (GameObject.Find("RES_Arrow_Left")).GetComponent<Button>();
+        SHPBar = new InfoPaneSlider();
+        DEFBar = new InfoPaneSlider();
+        INDBar = new InfoPaneSlider();
+        ECOBar = new InfoPaneSlider();
+        RESBar = new InfoPaneSlider();
 
-        ShpRight = (GameObject.Find("SHP_Arrow_Right")).GetComponent<Button>();
-        DefRight = (GameObject.Find("DEF_Arrow_Right")).GetComponent<Button>();
-        IndRight = (GameObject.Find("IND_Arrow_Right")).GetComponent<Button>();
-        EcoRight = (GameObject.Find("ECO_Arrow_Right")).GetComponent<Button>();
-        ResRight = (GameObject.Find("RES_Arrow_Right")).GetComponent<Button>();
+        SHPBar.Init("SHP_Arrow_Left", "SHP_Arrow_Right", "SHP_BAR", "ship",     this);
+        DEFBar.Init("DEF_Arrow_Left", "DEF_Arrow_Right", "DEF_BAR", "defense",  this);
+        INDBar.Init("IND_Arrow_Left", "IND_Arrow_Right", "IND_BAR", "industry", this);
+        ECOBar.Init("ECO_Arrow_Left", "ECO_Arrow_Right", "ECO_BAR", "ecology",  this);
+        RESBar.Init("RES_Arrow_Left", "RES_Arrow_Right", "RES_BAR", "research", this);
 
-        ShpLeft.onClick.AddListener(() => UpdateSlider("ship",     -0.1f, "arrow"));
-        DefLeft.onClick.AddListener(() => UpdateSlider("defense",  -0.1f, "arrow"));
-        IndLeft.onClick.AddListener(() => UpdateSlider("industry", -0.1f, "arrow"));
-        EcoLeft.onClick.AddListener(() => UpdateSlider("ecology",  -0.1f, "arrow"));
-        ResLeft.onClick.AddListener(() => UpdateSlider("research", -0.1f, "arrow"));
-
-        ShpRight.onClick.AddListener(() => UpdateSlider("ship",     0.1f, "arrow"));
-        DefRight.onClick.AddListener(() => UpdateSlider("defense",  0.1f, "arrow"));
-        IndRight.onClick.AddListener(() => UpdateSlider("industry", 0.1f, "arrow"));
-        EcoRight.onClick.AddListener(() => UpdateSlider("ecology",  0.1f, "arrow"));
-        ResRight.onClick.AddListener(() => UpdateSlider("research", 0.1f, "arrow"));
-
-        SHPBar = GameObject.Find("SHP_BAR").GetComponent<Slider>();
-        DEFBar = GameObject.Find("DEF_BAR").GetComponent<Slider>();
-        INDBar = GameObject.Find("IND_BAR").GetComponent<Slider>();
-        ECOBar = GameObject.Find("ECO_BAR").GetComponent<Slider>();
-        RESBar = GameObject.Find("RES_BAR").GetComponent<Slider>();
-
-        SHPBar.onValueChanged.AddListener(delegate { UpdateSlider("ship",     SHPBar.value, "slider"); });
-        DEFBar.onValueChanged.AddListener(delegate { UpdateSlider("defense",  DEFBar.value, "slider"); });
-        INDBar.onValueChanged.AddListener(delegate { UpdateSlider("industry", INDBar.value, "slider"); });
-        ECOBar.onValueChanged.AddListener(delegate { UpdateSlider("ecology",  ECOBar.value, "slider"); });
-        RESBar.onValueChanged.AddListener(delegate { UpdateSlider("research", RESBar.value, "slider"); });
-
-        EnableSliders(false);
+        SliderGroup = GameObject.Find("Sliders").GetComponent<CanvasGroup>();
     }
 
     public void OnStarClicked(StarProperties star) {
         currentStar = star;
         UpdatePane();
-        EnableSliders(true);
     }
 
     public void TurnDone() {
@@ -110,23 +72,26 @@ public class InfoPaneManager : MonoBehaviour {
             Bases.text = currentStar.population.ToString("##0");
             Production.text = production;
 
-            SHPBar.value = currentStar.GetSpending("ship");
-            DEFBar.value = currentStar.GetSpending("defense");
-            INDBar.value = currentStar.GetSpending("industry");
-            ECOBar.value = currentStar.GetSpending("ecology");
-            RESBar.value = currentStar.GetSpending("research");
+            SHPBar.SetValue(currentStar.GetSpending("ship"    ));
+            DEFBar.SetValue(currentStar.GetSpending("defense" ));
+            INDBar.SetValue(currentStar.GetSpending("industry"));
+            ECOBar.SetValue(currentStar.GetSpending("ecology" ));
+            RESBar.SetValue(currentStar.GetSpending("research"));
         }
 
         UpdateDetailPlate();
         UpdateStatsPlate();
+        UpdateSliders();
     }
 
     private void EnableSliders(bool enable) {
-        SHPBar.enabled = enable;
-        DEFBar.enabled = enable;
-        INDBar.enabled = enable;
-        ECOBar.enabled = enable;
-        RESBar.enabled = enable;
+        SHPBar.Enable(enable);
+        DEFBar.Enable(enable);
+        INDBar.Enable(enable);
+        ECOBar.Enable(enable);
+        RESBar.Enable(enable);
+        SliderGroup.alpha = enable ? 1.0f : 0.0f;
+        SliderGroup.blocksRaycasts = enable;
     }
 
     // Detail plate appears just below the star name.
@@ -147,7 +112,46 @@ public class InfoPaneManager : MonoBehaviour {
 
     // Stats plate appears below the detail plate, if at all.
     private void UpdateStatsPlate() {
-        
+        bool showPartialStats = false;
+        bool showFullStats = false;
+
+        if (currentStar != null) {
+            if (currentStar.owner == Owners.PLAYER) {
+                showFullStats = true;
+            } else if (currentStar.isExplored[Owners.PLAYER] && currentStar.owner != Owners.NONE) {
+                showPartialStats = true;
+
+                /* if (not in radar range) {
+                 *     indicate stats not current
+                 * }
+                 */
+            }
+        }
+
+        if (showPartialStats) {
+            string production = currentStar.factories.ToString("###0");
+            Production.text = production;
+        }
+
+        GameObject.Find("PopulationText")    .GetComponent<Text>().enabled = showFullStats || showPartialStats;
+        GameObject.Find("FactoriesText")     .GetComponent<Text>().enabled = showFullStats || showPartialStats;
+        GameObject.Find("BaseText")          .GetComponent<Text>().enabled = showFullStats || showPartialStats;
+        GameObject.Find("PopulationValue")   .GetComponent<Text>().enabled = showFullStats || showPartialStats;
+        GameObject.Find("ProductionValue")   .GetComponent<Text>().enabled = showFullStats || showPartialStats;
+        GameObject.Find("BaseValue")         .GetComponent<Text>().enabled = showFullStats || showPartialStats;
+        GameObject.Find("Vertical_Divider")  .GetComponent<Image>().enabled = showFullStats || showPartialStats;
+        GameObject.Find("Horizontal_Divider").GetComponent<Image>().enabled = showFullStats || showPartialStats;
+        GameObject.Find("InfoBorder")        .GetComponent<Image>().enabled = showFullStats || showPartialStats;
+    }
+
+    private void UpdateSliders() {
+        bool enableSliders = false;
+        if (currentStar != null) {
+            if (currentStar.owner == Owners.PLAYER) {
+                enableSliders = true;
+            }
+        }
+        EnableSliders(enableSliders);
     }
 
     private void OnDestroy() {
