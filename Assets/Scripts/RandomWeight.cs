@@ -25,7 +25,7 @@ public class RandomWeight<T> {
 
         foreach (var element in weights) {
             if (r < element.Value) {
-                Debug.Log(element.Key);
+                //Debug.Log(element.Key);
                 return element.Key;
             }
             r -= element.Value;

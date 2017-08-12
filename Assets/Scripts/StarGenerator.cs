@@ -243,7 +243,7 @@ public class StarGenerator : MonoBehaviour {
         instance.transform.localScale = new Vector3(4f, 4f, 4f);
         instance.transform.SetParent(starmap);
         instance.GetComponent<StarProperties>().starName = namegen.GetNextRandomName();
-        Debug.Log(namegen.GetNextRandomName());
+        //Debug.Log(namegen.GetNextRandomName());
         generatedStars.Add(instance);
     }
 
