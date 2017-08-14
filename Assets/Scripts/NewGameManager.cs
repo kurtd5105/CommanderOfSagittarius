@@ -34,9 +34,8 @@ public class NewGameManager : MonoBehaviour {
 
     public void populate() {
         flags = Resources.LoadAll<Sprite>("Flags");
-        Debug.Log(flags.Length);
 
-        foreach(string race in Enum.GetNames(typeof(Races))) {
+        foreach (string race in Enum.GetNames(typeof(Races))) {
             raceDrop.options.Add(new Dropdown.OptionData(race));
         }
 
