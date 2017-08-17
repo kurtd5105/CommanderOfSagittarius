@@ -3,10 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
+using System.Linq;
 
 public class GameManager : MonoBehaviour {
     public static GameManager instance = null;
     public StarGenerator generator = null;
+    public NewGameManager newGame = null;
+
+    //New game options data
+    public List<string> newData;
 
     void Awake() {
         if (instance == null) {
@@ -33,10 +38,17 @@ public class GameManager : MonoBehaviour {
             return;
         }
 
+        if (scene == SceneManager.GetSceneByName("new_game")) {
+            newGame = GameObject.Find("NewGameManager").GetComponent<NewGameManager>();
+        }
+
         if (scene == SceneManager.GetSceneByName("main_menu")) {
 
         }
         else if (scene == SceneManager.GetSceneByName("main")) {
+
+            newData = (newGame.getData()).ToList();
+
             generator = GetComponent<StarGenerator>();
             InitGame();
         }
