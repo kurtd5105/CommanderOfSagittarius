@@ -9,9 +9,11 @@ public class GameManager : MonoBehaviour {
     public static GameManager instance = null;
     public StarGenerator generator = null;
     public NewGameManager newGame = null;
+    public OptionsMenuManager options = null;
 
     //New game options data
     public List<string> newData;
+    public List<string> starData;
 
     void Awake() {
         if (instance == null) {
@@ -25,7 +27,7 @@ public class GameManager : MonoBehaviour {
 
         SceneManager.sceneLoaded += SceneChanged;
 
-        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("main_menu")) {
+        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("new_game")) {
 
         } else if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("main")) {
             generator = GetComponent<StarGenerator>();
@@ -42,7 +44,18 @@ public class GameManager : MonoBehaviour {
             newGame = GameObject.Find("NewGameManager").GetComponent<NewGameManager>();
         }
 
-        if (scene == SceneManager.GetSceneByName("main_menu")) {
+        if (scene == SceneManager.GetSceneByName("options_menu")) {
+            options = GameObject.Find("OptionsManager").GetComponent<OptionsMenuManager>();
+        }
+
+        if (scene == SceneManager.GetSceneByName("options_menu")) {
+        }
+
+        else if (scene == SceneManager.GetSceneByName("new_game")) {
+            starData = (options.getData()).ToList();
+        }
+
+        if (scene == SceneManager.GetSceneByName("new_game")) {
 
         }
         else if (scene == SceneManager.GetSceneByName("main")) {
@@ -55,7 +68,7 @@ public class GameManager : MonoBehaviour {
     }
 
     void InitGame() {
-        generator.SetupScene();
+        generator.SetupScene(starData);
     }
 
     private void OnDestroy() {

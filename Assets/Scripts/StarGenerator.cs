@@ -47,6 +47,9 @@ public class StarGenerator : MonoBehaviour {
     // Name generation setup
     public Lexic.NameGenerator namegen;
 
+    // Data retrieved from Options Menu
+    public List<string> starData;
+
     void Initialize() {
         starmap =         new GameObject("Starmap").transform;
         homeworldParent = new GameObject("Homeworlds").transform;
@@ -247,7 +250,13 @@ public class StarGenerator : MonoBehaviour {
         generatedStars.Add(instance);
     }
 
-    public void SetupScene() {
+    public void SetupScene(List<string> starData) {
+        this.starData = starData;
+        foreach(var data in starData)
+        {
+            Debug.Log(data);
+        }
+
         Initialize();
         SetupHomeworlds();
         // TODO: Add Sagittarius.
