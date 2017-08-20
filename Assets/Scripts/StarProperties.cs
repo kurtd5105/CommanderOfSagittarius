@@ -106,7 +106,7 @@ public class StarProperties : MonoBehaviour {
     }
 
     void OnMouseDown() {
-        Debug.Log("button clicked");
+        //Debug.Log("button clicked");
         InfoPane.OnStarClicked(this);
     }
 }

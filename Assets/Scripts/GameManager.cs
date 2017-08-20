@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour {
     public List<string> newData;
     public List<string> starData;
 
+    public List<PlayerInfo> playerList;
+
     void Awake() {
         if (instance == null) {
             instance = this;
@@ -62,13 +64,38 @@ public class GameManager : MonoBehaviour {
 
             newData = (newGame.getData()).ToList();
 
+            CreatePlayers();
+
             generator = GetComponent<StarGenerator>();
             InitGame();
         }
     }
 
     void InitGame() {
+        //Setup starmap based on player input
         generator.SetupScene(starData);
+    }
+
+    void CreatePlayers() {
+        playerList = new List<PlayerInfo>();
+
+        for (int i = 0; i <= int.Parse(starData[2]); i++)
+        {
+            PlayerInfo player = new PlayerInfo();
+
+            if (i == 0)
+            {
+                //Create human player
+                player.Init(Owners.PLAYER, newData[0], newData[1], newData[2], newData[4], newData[3]);
+            }
+            else
+            {
+                //Create rest of AI opponents
+                player.Init((Owners)(i + 1), newData[0], newData[1], newData[2], newData[4], newData[3]);
+            }
+
+            playerList.Add(player);
+        }
     }
 
     private void OnDestroy() {

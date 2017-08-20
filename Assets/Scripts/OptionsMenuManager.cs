@@ -34,18 +34,15 @@ public class OptionsMenuManager : MonoBehaviour
 
     public void populate()
     {
-        foreach (string diff in Enum.GetNames(typeof(Difficulty)))
-        {
+        foreach (string diff in Enum.GetNames(typeof(Difficulty))) {
             difficultyDrop.options.Add(new Dropdown.OptionData(diff));
         }
 
-        foreach (string size in Enum.GetNames(typeof(Sizes)))
-        {
+        foreach (string size in Enum.GetNames(typeof(Sizes))) {
             sizeDrop.options.Add(new Dropdown.OptionData(size));
         }
 
-        for (int i = 1; i <= numOponents; i++)
-        {
+        for (int i = 1; i <= numOponents; i++) {
             oponentsDrop.options.Add(new Dropdown.OptionData((i + "")));
         }
 

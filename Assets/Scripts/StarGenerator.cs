@@ -252,10 +252,6 @@ public class StarGenerator : MonoBehaviour {
 
     public void SetupScene(List<string> starData) {
         this.starData = starData;
-        foreach(var data in starData)
-        {
-            Debug.Log(data);
-        }
 
         Initialize();
         SetupHomeworlds();
