@@ -73,7 +73,10 @@ public class GameManager : MonoBehaviour {
 
     void InitGame() {
         //Setup starmap based on player input
+        StarScreenManager screenManager = GameObject.Find("StarCollider").GetComponent<StarScreenManager>();
         generator.SetupScene(starData);
+        screenManager.maxStarPositions = -generator.maxStarPositions;
+        screenManager.minStarPositions = -generator.minStarPositions;
     }
 
     void CreatePlayers() {

@@ -12,6 +12,9 @@ public class StarGenerator : MonoBehaviour {
     public const int columns = 12;
     public const int rows = 12;
 
+    public Vector2 maxStarPositions;
+    public Vector2 minStarPositions;
+
     /* 
      * Stars: A list of the game stars to instantiate.
      * The stars are required to be in the following order:
@@ -67,6 +70,9 @@ public class StarGenerator : MonoBehaviour {
         starColorToGameObject.Add(StarColor.BLUE, stars[3]);
         starColorToGameObject.Add(StarColor.PURPLE, stars[4]);
         starColorToGameObject.Add(StarColor.WHITE, stars[5]);
+
+        maxStarPositions = new Vector2(0.0f, 0.0f);
+        minStarPositions = new Vector2(float.MaxValue, float.MaxValue);
 
         // Generate and setup star weights.
         setupStarWeights();
@@ -157,6 +163,9 @@ public class StarGenerator : MonoBehaviour {
                 RemoveAdjacentQuadrantPositions(coords, quadrant, q, qx, qy);
             }
         }
+
+        minStarPositions = Vector2.Min(minStarPositions, randomPosition);
+        maxStarPositions = Vector2.Max(maxStarPositions, randomPosition);
 
         return randomPosition;
     }

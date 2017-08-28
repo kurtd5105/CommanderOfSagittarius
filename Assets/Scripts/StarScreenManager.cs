@@ -15,6 +15,9 @@ public class StarScreenManager : MonoBehaviour, IPointerDownHandler, IPointerUpH
     public Vector2 lastPos = Vector2.zero;
     public Vector2 currPos = Vector2.zero;
 
+    public Vector2 maxStarPositions;
+    public Vector2 minStarPositions;
+
     public Vector3 starPos;
 
     void Start() {
@@ -27,7 +30,6 @@ public class StarScreenManager : MonoBehaviour, IPointerDownHandler, IPointerUpH
     }
 
     void Update() {
-
         mousePan();
     }
 
@@ -58,7 +60,7 @@ public class StarScreenManager : MonoBehaviour, IPointerDownHandler, IPointerUpH
     }
 
     public void mousePan() {
-        if (mouseDown == true) {
+        if (mouseDown) {
             starPos = StarmapObj.transform.position;
             currPos = (Vector2)Input.mousePosition;
 
@@ -71,11 +73,34 @@ public class StarScreenManager : MonoBehaviour, IPointerDownHandler, IPointerUpH
 
             //Starscreen pan Blocking
             //Todo: Fix boundaries they are hardcoded and incorrect.
-            if (!((starPos.x >= -10 && delta.x > 0) || (starPos.x <= -17 && delta.x < 0)
-                || (starPos.y <= -20 && delta.y < 0) || (starPos.y >= 0 && delta.y > 0))) {
+            /*if (!((starPos.x >= -10 && delta.x > 0) || (starPos.x <= -17 && delta.x < 0)
+                || (starPos.y <= -20 && delta.y < 0) || (starPos.y >= 0 && delta.y > 0))) */
+
+            if (starPos.x + delta.x > minStarPositions.x) {
+                delta.x = -starPos.x;
+                Debug.Log("Constraining min X");
+            }
+
+            if (starPos.y + delta.y > minStarPositions.y) {
+                delta.y = -starPos.y;
+                Debug.Log("Constraining min Y");
+            }
+
+            if (starPos.x + delta.x < maxStarPositions.x) {
+                delta.x = maxStarPositions.x - starPos.x;
+                Debug.Log("Constraining max X");
+            }
+
+            if (starPos.y + delta.y < maxStarPositions.y) {
+                delta.y = maxStarPositions.y - starPos.y;
+                Debug.Log("Constraining max Y");
+            }
+
+            float divisor = 20.0f;//30.0f;
+            /*if ((starPos.x <= 0 || delta.x < 0) && (starPos.y <= 0 || delta.y < 0)) */{
                 //Not touching boundaries
-                StarmapObj.transform.position += new Vector3(delta.x / 30.0f, delta.y / 30.0f, 0.0F);
-                HomeworldObj.transform.position += new Vector3(delta.x / 30.0f, delta.y / 30.0f, 0.0F);
+                StarmapObj.transform.position += new Vector3(delta.x / divisor, delta.y / divisor, 0.0F);
+                HomeworldObj.transform.position += new Vector3(delta.x / divisor, delta.y / divisor, 0.0F);
             }
 
             lastPos = currPos;
