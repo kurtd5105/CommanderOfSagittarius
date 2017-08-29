@@ -114,7 +114,7 @@ public class StarGenerator : MonoBehaviour {
             CreateNewStar(i, 0, stars[0]);
             generatedStars[i].transform.localScale = new Vector3(5f, 5f, 5f);
             generatedStars[i].transform.SetParent(homeworldParent);
-            generatedStars[i].GetComponent<StarProperties>().InitAndGenerate(infoPane, StarColor.YELLOW, true, activePlayers[i].Key);
+            generatedStars[i].GetComponent<Star>().InitAndGenerate(infoPane, StarColor.YELLOW, true, activePlayers[i].Key);
         }
     }
 
@@ -131,7 +131,7 @@ public class StarGenerator : MonoBehaviour {
                     hasCountChanged = true;
                     GameObject toInstantiate = GetRandomStarType();
                     CreateNewStar(q, 1, toInstantiate);
-                    generatedStars[generatedStars.Count - 1].GetComponent<StarProperties>().InitAndGenerate(infoPane, StarColor.YELLOW, false);
+                    generatedStars[generatedStars.Count - 1].GetComponent<Star>().InitAndGenerate(infoPane, StarColor.YELLOW, false);
                 }
             }
         }
@@ -254,7 +254,7 @@ public class StarGenerator : MonoBehaviour {
         GameObject instance = Instantiate(toInstantiate, RandomPosition(q, maxDeviation), Quaternion.identity) as GameObject;
         instance.transform.localScale = new Vector3(4f, 4f, 4f);
         instance.transform.SetParent(starmap);
-        instance.GetComponent<StarProperties>().starName = namegen.GetNextRandomName();
+        instance.GetComponent<Star>().starName = namegen.GetNextRandomName();
         //Debug.Log(namegen.GetNextRandomName());
         generatedStars.Add(instance);
     }

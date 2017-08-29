@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class InfoPaneManager : MonoBehaviour {
 
     public GameObject infoPane;
-    public StarProperties currentStar = null;
+    public Star currentStar = null;
 
     public Text Name;
     public Text MaxPop;
@@ -44,7 +44,7 @@ public class InfoPaneManager : MonoBehaviour {
         SliderGroup = GameObject.Find("Sliders").GetComponent<CanvasGroup>();
     }
 
-    public void OnStarClicked(StarProperties star) {
+    public void OnStarClicked(Star star) {
         currentStar = star;
         UpdatePane();
     }
@@ -63,13 +63,13 @@ public class InfoPaneManager : MonoBehaviour {
     public void UpdatePane() {
         if (currentStar != null) {
             string name = currentStar.starName;
-            string maxPop = "MAX POP " + currentStar.effectiveMaxPopulation.ToString("##0");
-            string production = currentStar.factories.ToString("###0") + " (RAW " + currentStar.factories.ToString("###0") + ")";
+            string maxPop = "MAX POP " + currentStar.starProperties.effectiveMaxPopulation.ToString("##0");
+            string production = currentStar.starProperties.factories.ToString("###0") + " (RAW " + currentStar.starProperties.factories.ToString("###0") + ")";
 
             Name.text = name;
             MaxPop.text = maxPop;
-            Population.text = currentStar.population.ToString("##0");
-            Bases.text = currentStar.population.ToString("##0");
+            Population.text = currentStar.starProperties.population.ToString("##0");
+            Bases.text = currentStar.starProperties.population.ToString("##0");
             Production.text = production;
 
             SHPBar.SetValue(currentStar.GetSpending("ship"    ));
@@ -99,7 +99,7 @@ public class InfoPaneManager : MonoBehaviour {
         bool enablePlanetInfo = false;
 
         if (currentStar != null) {
-            if (currentStar.owner == Owners.PLAYER || currentStar.isExplored[Owners.PLAYER]) {
+            if (currentStar.starProperties.owner == Owners.PLAYER || currentStar.starProperties.isExplored[Owners.PLAYER]) {
                 enablePlanetInfo = true;
             }
         }
@@ -116,9 +116,9 @@ public class InfoPaneManager : MonoBehaviour {
         bool showFullStats = false;
 
         if (currentStar != null) {
-            if (currentStar.owner == Owners.PLAYER) {
+            if (currentStar.starProperties.owner == Owners.PLAYER) {
                 showFullStats = true;
-            } else if (currentStar.isExplored[Owners.PLAYER] && currentStar.owner != Owners.NONE) {
+            } else if (currentStar.starProperties.isExplored[Owners.PLAYER] && currentStar.starProperties.owner != Owners.NONE) {
                 showPartialStats = true;
 
                 /* if (not in radar range) {
@@ -129,7 +129,7 @@ public class InfoPaneManager : MonoBehaviour {
         }
 
         if (showPartialStats) {
-            string production = currentStar.factories.ToString("###0");
+            string production = currentStar.starProperties.factories.ToString("###0");
             Production.text = production;
         }
 
@@ -147,7 +147,7 @@ public class InfoPaneManager : MonoBehaviour {
     private void UpdateSliders() {
         bool enableSliders = false;
         if (currentStar != null) {
-            if (currentStar.owner == Owners.PLAYER) {
+            if (currentStar.starProperties.owner == Owners.PLAYER) {
                 enableSliders = true;
             }
         }
