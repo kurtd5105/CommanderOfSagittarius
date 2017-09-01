@@ -29,24 +29,24 @@ public class StarScreenManager : MonoBehaviour, IPointerDownHandler, IPointerUpH
         StarmapObj = GameObject.Find("Starmap");
         HomeworldObj = GameObject.Find("Homeworlds");
 
-        Debug.Log("Min x is: " + minStarPositions.x);
         oldmax = maxStarPositions;
         oldmin = minStarPositions;
 
         scale = new Vector3(3.0F, 3.0F, 1.0F);
 
-        updateScale(scale.x, scale.y);
-
-        StarmapObj.transform.position = new Vector3(((maxStarPositions.x - minStarPositions.x) / 2) - (maxStarPositions.x / 4), 
-            ((maxStarPositions.y - minStarPositions.y) / 2) - (maxStarPositions.x / 4), 1.0F);
-        HomeworldObj.transform.position = StarmapObj.transform.position;
-
+        //Entered game scene without going through main menu and creating game manager.
         try {
+            StarmapObj.transform.position = new Vector3(((maxStarPositions.x - minStarPositions.x) / 2) - (maxStarPositions.x / 4),
+            ((maxStarPositions.y - minStarPositions.y) / 2) - (maxStarPositions.x / 4), 1.0F);
+            HomeworldObj.transform.position = StarmapObj.transform.position;
+
             StarmapObj.transform.localScale = scale;
             HomeworldObj.transform.localScale = StarmapObj.transform.localScale;
         } catch (Exception) {
             Debug.Log("Did not create Game manager from start screen.");
         }
+
+        updateScale(scale.x, scale.y);
 
         mouseDown = false;
     }
@@ -83,7 +83,6 @@ public class StarScreenManager : MonoBehaviour, IPointerDownHandler, IPointerUpH
         StarmapObj.transform.localScale += new Vector3(val, val, 0.0F);
 
         updateScale(StarmapObj.transform.localScale.x + val, StarmapObj.transform.localScale.y + val);
-        Debug.Log("Scale is: " + StarmapObj.transform.localScale.x + val);
 
         HomeworldObj.transform.localScale = StarmapObj.transform.localScale;
     }
@@ -93,8 +92,7 @@ public class StarScreenManager : MonoBehaviour, IPointerDownHandler, IPointerUpH
             starPos = StarmapObj.transform.position;
             currPos = (Vector2)Input.mousePosition;
 
-            if (lastPos.x != 0 && lastPos.y != 0)
-            {
+            if (lastPos.x != 0 && lastPos.y != 0) {
                 delta = currPos - lastPos;
             } else {
                 delta = Vector2.zero;
@@ -107,7 +105,7 @@ public class StarScreenManager : MonoBehaviour, IPointerDownHandler, IPointerUpH
             //X panning and boundary check.
             if ((clampPos.x != minStarPositions.x && clampPos.x != maxStarPositions.x) || 
                 (((StarmapObj.transform.position.x < maxStarPositions.x) && (delta.x > 0)) || 
-                ((StarmapObj.transform.position.x < maxStarPositions.x) && (delta.x > 0) ))) {
+                ((StarmapObj.transform.position.x > minStarPositions.x) && (delta.x < 0) ))) {
 
                 StarmapObj.transform.position += new Vector3(delta.x / 20.0F, 0, 0.0F);
                 HomeworldObj.transform.position += new Vector3(delta.x / 20.0F, 0, 0.0F);
@@ -116,7 +114,7 @@ public class StarScreenManager : MonoBehaviour, IPointerDownHandler, IPointerUpH
             //Y panning and boundary check.
             if ((clampPos.y != minStarPositions.y && clampPos.y != maxStarPositions.y) ||
                 (((StarmapObj.transform.position.y < maxStarPositions.y) && (delta.y > 0)) ||
-                ((StarmapObj.transform.position.y < maxStarPositions.y) && (delta.y > 0)))) {
+                ((StarmapObj.transform.position.y > minStarPositions.y) && (delta.y < 0)))) {
                 StarmapObj.transform.position += new Vector3(0, delta.y / 20.0F, 0.0F);
                 HomeworldObj.transform.position += new Vector3(0, delta.y / 20.0F, 0.0F);
             }
@@ -125,15 +123,11 @@ public class StarScreenManager : MonoBehaviour, IPointerDownHandler, IPointerUpH
         }
     }
 
+    //Update panning borders as Star screen zooms in and out.
     public void updateScale(float scaleX, float scaleY) {
-        Debug.Log(" ( " + oldmax.x + " * " + scaleX + " ) " + " + " + oldmax.x);
-        Debug.Log(" ( " + oldmin.x + " * " + scaleX + " ) " + " + " + oldmin.x);
         maxStarPositions.x = (oldmax.x * scaleX) - (oldmax.x);
-        maxStarPositions.y = (oldmax.y * scaleY) - (oldmax.y);
-        minStarPositions.x = (oldmin.x * scaleX) - (oldmin.x);
+        maxStarPositions.y = (oldmax.y * scaleY) - (oldmax.x * 0.9F);
+        minStarPositions.x = (oldmin.x * scaleX) + (oldmin.x);
         //minStarPositions.y = (minStarPositions.y * scaleY) + StarmapObj.transform.position.y;
-
-        Debug.Log("New max is: " + maxStarPositions);
-        Debug.Log("New min is: " + minStarPositions);
     }
 }
