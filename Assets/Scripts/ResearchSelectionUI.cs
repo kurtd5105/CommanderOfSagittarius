@@ -15,6 +15,7 @@ public class ResearchSelectionUI : MonoBehaviour {
     public GameObject ResearchButton3Obj;
     public GameObject ResearchButton4Obj;
     public GameObject ResearchPanelObj;
+    public GameObject SelectionPanelObj;
 
     public Button ResearchButton1;
     public Button ResearchButton2;
@@ -32,6 +33,7 @@ public class ResearchSelectionUI : MonoBehaviour {
         ResearchButton2Obj = GameObject.Find("Technology_2_Button");
         ResearchButton3Obj = GameObject.Find("Technology_3_Button");
         ResearchButton4Obj = GameObject.Find("Technology_4_Button");
+        SelectionPanelObj = GameObject.Find("SelectionPanel");
 
         TitlePanel = TitlePanelObj.GetComponent<Text>();
         DescriptionText = DescriptionTextObj.GetComponent<Text>();
@@ -51,18 +53,36 @@ public class ResearchSelectionUI : MonoBehaviour {
 
     public void UpdateText(string title, string description, string[] research) {
         //Set what the values are for the Research UI.
+        SelectionPanelObj.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 0);
 
         UpdateDimensions(research.Length);
 
         TitlePanel.text = title;
         DescriptionText.text = description;
+
+        ResearchPanelObj.SetActive(true);
     }
 
     public void UpdateDimensions(int number) {
         //Set what buttons are visible and resize of Panel under buttons.
+        float height = ResearchButton1.GetComponent<RectTransform>().sizeDelta.y;
+        float norm = SelectionPanelObj.GetComponent<RectTransform>().offsetMin.x;
+        SelectionPanelObj.GetComponent<RectTransform>().offsetMin = new Vector2(norm, 0);
+
+        resetButtons();
 
         for (int i = 0; i < number; i++) {
-            buttonsObj[i].SetActive(false);
+            buttonsObj[i].SetActive(true);
+        }
+
+        SelectionPanelObj.GetComponent<RectTransform>().offsetMin += new Vector2(0, height*(4 - number));
+
+        ResearchPanelObj.SetActive(true);
+    }
+
+    public void resetButtons() {
+        foreach (var button in buttonsObj) {
+            button.SetActive(false);
         }
     }
 }
