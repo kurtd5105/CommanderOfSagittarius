@@ -24,6 +24,9 @@ public class ResearchSelectionUI : MonoBehaviour {
 
     public List<GameObject> buttonsObj;
 
+    public Vector2 normResearchUI;
+    public Vector2 normSelectionPanel;
+
     public void Init() {
 
         TitlePanelObj = GameObject.Find("TitlePanel");
@@ -48,13 +51,16 @@ public class ResearchSelectionUI : MonoBehaviour {
         buttonsObj.Add(ResearchButton3Obj);
         buttonsObj.Add(ResearchButton4Obj);
 
+        //Save initial right and bottom dimensions of UI.
+        normResearchUI = ResearchPanelObj.GetComponent<RectTransform>().offsetMin;
+        normSelectionPanel = SelectionPanelObj.GetComponent<RectTransform>().offsetMin;
+
         ResearchPanelObj.SetActive(false);
+
+        UpdateDimensions(1);
     }
 
     public void UpdateText(string title, string description, string[] research) {
-        //Set what the values are for the Research UI.
-        SelectionPanelObj.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 0);
-
         UpdateDimensions(research.Length);
 
         TitlePanel.text = title;
@@ -66,8 +72,6 @@ public class ResearchSelectionUI : MonoBehaviour {
     public void UpdateDimensions(int number) {
         //Set what buttons are visible and resize of Panel under buttons.
         float height = ResearchButton1.GetComponent<RectTransform>().sizeDelta.y;
-        float norm = SelectionPanelObj.GetComponent<RectTransform>().offsetMin.x;
-        SelectionPanelObj.GetComponent<RectTransform>().offsetMin = new Vector2(norm, 0);
 
         resetButtons();
 
@@ -76,6 +80,7 @@ public class ResearchSelectionUI : MonoBehaviour {
         }
 
         SelectionPanelObj.GetComponent<RectTransform>().offsetMin += new Vector2(0, height*(4 - number));
+        ResearchPanelObj.GetComponent<RectTransform>().offsetMin += new Vector2(0, height * (4 - number));
 
         ResearchPanelObj.SetActive(true);
     }
@@ -84,5 +89,17 @@ public class ResearchSelectionUI : MonoBehaviour {
         foreach (var button in buttonsObj) {
             button.SetActive(false);
         }
+    }
+
+    public void onClick(int item) {
+
+        //TODO: Handle player click.
+
+        //Reset the UI size and buttons.
+        ResearchPanelObj.GetComponent<RectTransform>().offsetMin = normResearchUI;
+        SelectionPanelObj.GetComponent<RectTransform>().offsetMin = normSelectionPanel;
+
+        ResearchPanelObj.SetActive(false);
+        resetButtons();
     }
 }
