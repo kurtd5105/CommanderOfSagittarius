@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour {
 
     public List<PlayerInfo> playerList;
 
+    int playerCount;
+
     void Awake() {
         if (instance == null) {
             instance = this;
@@ -55,6 +57,7 @@ public class GameManager : MonoBehaviour {
 
         else if (scene == SceneManager.GetSceneByName("new_game")) {
             starData = (options.getData()).ToList();
+            playerCount = int.Parse(starData[2]) + 1;
         }
 
         if (scene == SceneManager.GetSceneByName("new_game")) {
@@ -75,6 +78,7 @@ public class GameManager : MonoBehaviour {
         //Setup starmap based on player input
         StarScreenManager screenManager = GameObject.Find("StarCollider").GetComponent<StarScreenManager>();
         generator.SetupScene(starData);
+        SetupHomeworlds();
         screenManager.maxStarPositions = -generator.maxStarPositions;
         screenManager.minStarPositions = -generator.minStarPositions;
     }
@@ -82,7 +86,7 @@ public class GameManager : MonoBehaviour {
     void CreatePlayers() {
         playerList = new List<PlayerInfo>();
 
-        for (int i = 0; i <= int.Parse(starData[2]); i++)
+        for (int i = 0; i < playerCount; i++)
         {
             PlayerInfo player = new PlayerInfo();
 
@@ -94,10 +98,17 @@ public class GameManager : MonoBehaviour {
             else
             {
                 //Create rest of AI opponents
+                // Todo: randomize the rest of the details such as flag, civ name, etc
                 player.Init((Owners)(i + 1), newData[0], newData[1], newData[2], newData[4], newData[3]);
             }
 
             playerList.Add(player);
+        }
+    }
+
+    void SetupHomeworlds() {
+        for (int i = 0; i < playerCount; i++) {
+            playerList[i].AddHomeworld(generator.generatedStars[i].GetComponent<Star>().id, generator.generatedStars[i].GetComponent<Star>());
         }
     }
 

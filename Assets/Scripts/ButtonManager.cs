@@ -18,6 +18,6 @@ public class ButtonManager : MonoBehaviour {
 
     public void TurnClicked() {
         NextTurn();
-        NextTurnDone();
+        NextTurnDone(); // TODO: subscribe research management to this, gather each player's planets and calculate research progress.
     }
 }

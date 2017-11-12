@@ -10,6 +10,7 @@ public class PlayerInfo {
     public String CivName;
     public String HomeworldName;
     public String leaderName;
+    public Dictionary<uint, Star> ownedStars;
 
 	public void Init (Owners playerOwner, String playerRace, String flagName, String CivName, String HomeworldName, String leaderName) {
         this.playerOwner = playerOwner;
@@ -18,6 +19,11 @@ public class PlayerInfo {
         this.CivName = CivName;
         this.HomeworldName = HomeworldName;
         this.leaderName = leaderName;
+        ownedStars = new Dictionary<uint, Star>();
     }
 
+    public void AddHomeworld(uint id, Star star) {
+        ownedStars[id] = star;
+        star.starProperties.owner = playerOwner;
+    }
 }

@@ -6,7 +6,7 @@ using Random = UnityEngine.Random;
 
 public class StarGenerator : MonoBehaviour {
     // TODO: Make these get set based on player count/map size
-    public const int homeworlds = 4;
+    public int homeworlds;
     public const int startypes = 6;
     public const int quadrants = 4;
     public const int columns = 12;
@@ -27,10 +27,6 @@ public class StarGenerator : MonoBehaviour {
      */
     public GameObject[] stars;
     public SortedDictionary<StarColor, GameObject> starColorToGameObject;
-
-    // Pairs containing all the owners and their race.
-    // TODO: Make these get set based on player choice + random chance for AI
-    public KeyValuePair<Owners, Races>[] activePlayers;
 
     // List of all the generated stars.
     public List<GameObject> generatedStars;
@@ -53,15 +49,14 @@ public class StarGenerator : MonoBehaviour {
     // Data retrieved from Options Menu
     public List<string> starData;
 
+    uint currentID;
+
     void Initialize() {
+        currentID = 0;
+        homeworlds = int.Parse(starData[2]) + 1;
+
         starmap =         new GameObject("Starmap").transform;
         homeworldParent = new GameObject("Homeworlds").transform;
-
-        activePlayers =    new KeyValuePair<Owners, Races>[homeworlds];
-        activePlayers[0] = new KeyValuePair<Owners, Races>(Owners.PLAYER, Races.HUMAN);
-        activePlayers[1] = new KeyValuePair<Owners, Races>(Owners.AI1, Races.CRYSTALS);
-        activePlayers[2] = new KeyValuePair<Owners, Races>(Owners.AI2, Races.CYBORG);
-        activePlayers[3] = new KeyValuePair<Owners, Races>(Owners.AI3, Races.LIZARDPEOPLE);
 
         starColorToGameObject = new SortedDictionary<StarColor, GameObject>();
         starColorToGameObject.Add(StarColor.YELLOW, stars[0]);
@@ -114,7 +109,7 @@ public class StarGenerator : MonoBehaviour {
             CreateNewStar(i, 0, stars[0]);
             generatedStars[i].transform.localScale = new Vector3(5f, 5f, 5f);
             generatedStars[i].transform.SetParent(homeworldParent);
-            generatedStars[i].GetComponent<Star>().InitAndGenerate(infoPane, StarColor.YELLOW, true, activePlayers[i].Key);
+            generatedStars[i].GetComponent<Star>().InitAndGenerate(infoPane, StarColor.YELLOW, true, currentID++);
         }
     }
 
@@ -131,7 +126,7 @@ public class StarGenerator : MonoBehaviour {
                     hasCountChanged = true;
                     GameObject toInstantiate = GetRandomStarType();
                     CreateNewStar(q, 1, toInstantiate);
-                    generatedStars[generatedStars.Count - 1].GetComponent<Star>().InitAndGenerate(infoPane, StarColor.YELLOW, false);
+                    generatedStars[generatedStars.Count - 1].GetComponent<Star>().InitAndGenerate(infoPane, StarColor.YELLOW, false, currentID++);
                 }
             }
         }

@@ -6,10 +6,12 @@ public class Star : MonoBehaviour {
     public string starName;
     public StarProperties starProperties;
     StarSpending spendingInfo;
+    // Corresponds to location in master star array.
+    public uint id;
 
     private InfoPaneManager InfoPane;
 
-    public void InitAndGenerate(InfoPaneManager infoPane, StarColor color, bool isHomeworld, Owners owner = Owners.NONE) {
+    public void InitAndGenerate(InfoPaneManager infoPane, StarColor color, bool isHomeworld, uint id, Owners owner = Owners.NONE) {
         starProperties = new StarProperties();
         starProperties.InitAndGenerate(color, isHomeworld, owner);
         spendingInfo = new StarSpending();

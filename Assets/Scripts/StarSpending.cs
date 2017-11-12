@@ -16,8 +16,9 @@ public class StarSpending {
 
     // Spending parameter to be set by the planet spending sliders.
 
-    public float Production      { get; set; } // in BC
-    public float WasteProduction { get; set; } // in BC
+    public float Production         { get; set; } // in BC
+    public float WasteProduction    { get; set; } // in BC
+    public float ResearchProduction { get; set; } // in RP
 
     public Dictionary<string, float> SpendingBook = new Dictionary<string, float>();
 
@@ -36,6 +37,8 @@ public class StarSpending {
             SpendingBook["ecology"] = ((WasteProduction / 2) / Production);
         }
         SpendingBook["industry"] = 1.0f - SpendingBook["ecology"];
+
+        ResearchProduction = 0.0f;
     }
 
     public void calcSpending(string name, float value) {
@@ -106,6 +109,7 @@ public class StarSpending {
         industrySpent = SpendingBook["industry"] * Production;
 
         // Natural population growth. Starts out low, peaks at half, ends low.
+        // TODO: make population grow slower.
         population += (float)((-Math.Pow(20 * ((maxPopulation / 2.0f) - population) / maxPopulation, 2) + 100.0f) / 1000.0f + 0.01f) * population;
         population += populationSpent / 20.0f;
         factories += industrySpent / 10.0f;
@@ -130,5 +134,7 @@ public class StarSpending {
         }
 
         SpendingBook["industry"] = 1.0f - SpendingBook["ecology"];
+
+        ResearchProduction = SpendingBook["research"] * Production;
     }
 }
