@@ -7,6 +7,7 @@ using System.Linq;
 
 public class GameManager : MonoBehaviour {
     public static GameManager instance = null;
+    public static TechnologyFactory techFactory = null;
     public StarGenerator generator = null;
     public NewGameManager newGame = null;
     public OptionsMenuManager options = null;
@@ -53,32 +54,32 @@ public class GameManager : MonoBehaviour {
         }
 
         if (scene == SceneManager.GetSceneByName("options_menu")) {
-        }
 
-        else if (scene == SceneManager.GetSceneByName("new_game")) {
+        } else if (scene == SceneManager.GetSceneByName("new_game")) {
             starData = (options.getData()).ToList();
             playerCount = int.Parse(starData[2]) + 1;
         }
 
         if (scene == SceneManager.GetSceneByName("new_game")) {
 
-        }
-        else if (scene == SceneManager.GetSceneByName("main")) {
-
+        } else if (scene == SceneManager.GetSceneByName("main")) {
             newData = (newGame.getData()).ToList();
-
-            CreatePlayers();
-
             generator = GetComponent<StarGenerator>();
             InitGame();
         }
     }
 
     void InitGame() {
+        techFactory = new TechnologyFactory();
+
+        CreatePlayers();
+
         //Setup starmap based on player input
         StarScreenManager screenManager = GameObject.Find("StarCollider").GetComponent<StarScreenManager>();
+
         generator.SetupScene(starData);
         SetupHomeworlds();
+
         screenManager.maxStarPositions = -generator.maxStarPositions;
         screenManager.minStarPositions = -generator.minStarPositions;
     }
@@ -93,13 +94,13 @@ public class GameManager : MonoBehaviour {
             if (i == 0)
             {
                 //Create human player
-                player.Init(Owners.PLAYER, newData[0], newData[1], newData[2], newData[4], newData[3]);
+                player.Init(Owners.PLAYER, newData[0], newData[1], newData[2], newData[4], newData[3], techFactory);
             }
             else
             {
                 //Create rest of AI opponents
                 // Todo: randomize the rest of the details such as flag, civ name, etc
-                player.Init((Owners)(i + 1), newData[0], newData[1], newData[2], newData[4], newData[3]);
+                player.Init((Owners)(i + 1), newData[0], newData[1], newData[2], newData[4], newData[3], techFactory);
             }
 
             playerList.Add(player);

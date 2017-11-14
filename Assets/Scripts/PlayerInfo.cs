@@ -13,7 +13,7 @@ public class PlayerInfo {
     public Dictionary<uint, Star> ownedStars;
     public ResearchManager researchManager;
 
-	public void Init (Owners playerOwner, String playerRace, String flagName, String CivName, String HomeworldName, String leaderName) {
+	public void Init (Owners playerOwner, String playerRace, String flagName, String CivName, String HomeworldName, String leaderName, TechnologyFactory factory) {
         this.playerOwner = playerOwner;
         this.playerRace = (Races)System.Enum.Parse(typeof(Races), playerRace);
         this.flagName = flagName;
@@ -23,7 +23,7 @@ public class PlayerInfo {
         ownedStars = new Dictionary<uint, Star>();
 
         researchManager = new ResearchManager();
-        researchManager.InitAndGenerate();
+        researchManager.InitAndGenerate(factory);
 
         ButtonManager.NextTurn += Turn;
     }
