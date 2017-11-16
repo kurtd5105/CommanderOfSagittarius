@@ -22,8 +22,7 @@ public class PlayerInfo {
         this.leaderName = leaderName;
         ownedStars = new Dictionary<uint, Star>();
 
-        researchManager = new ResearchManager();
-        researchManager.InitAndGenerate(factory);
+        researchManager = new ResearchManager(factory);
 
         ButtonManager.NextTurn += Turn;
     }
