@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 public class ButtonManager : MonoBehaviour {
     public delegate void OnNextTurnClicked();
     public static event OnNextTurnClicked NextTurn;
+    public delegate void OnNextTurnResearch();
+    public static event OnNextTurnResearch NextTurnResearch;
     public delegate void OnNextTurnDone();
     public static event OnNextTurnDone NextTurnDone;
     public void SwitchScene(string newScene) {
@@ -18,6 +20,7 @@ public class ButtonManager : MonoBehaviour {
 
     public void TurnClicked() {
         NextTurn();
-        NextTurnDone(); // TODO: subscribe research management to this, gather each player's planets and calculate research progress.
+        NextTurnResearch();
+        NextTurnDone();
     }
 }

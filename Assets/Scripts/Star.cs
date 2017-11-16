@@ -42,6 +42,10 @@ public class Star : MonoBehaviour {
         return spendingInfo.SpendingBook[name];
     }
 
+    public float GetResearchPointsProduced() {
+        return spendingInfo.ResearchProduction;
+    }
+
     // TODO: Add this to a turn event. Unsubscribe if no owner or no planet. Subscribe if otherwise.
     public void Turn() {
         if (starProperties.planetType != PlanetTypes.NONE && starProperties.owner != Owners.NONE && starProperties.population > 0) {

@@ -25,6 +25,7 @@ public class PlayerInfo {
         researchManager = new ResearchManager(factory);
 
         ButtonManager.NextTurn += Turn;
+        ButtonManager.NextTurnResearch += DoResearch;
     }
 
     public void AddHomeworld(uint id, Star star) {
@@ -33,12 +34,21 @@ public class PlayerInfo {
     }
 
     public void Turn() {
-        // TODO: Calculate RPs generated.
-        int researchPoints = 0;
+
+    }
+
+    public void DoResearch() {
+        float researchPoints = 0.0f;
+
+        foreach (var star in ownedStars.Values) {
+            researchPoints += star.GetResearchPointsProduced();
+        }
+
         researchManager.Turn(researchPoints);
     }
 
     private void OnDestroy() {
         ButtonManager.NextTurn -= Turn;
+        ButtonManager.NextTurnResearch -= DoResearch;
     }
 }
