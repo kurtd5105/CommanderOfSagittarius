@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 // The research manager handles all the research calculations and tracking for research and owned tech.
 public class ResearchManager {
@@ -11,16 +9,15 @@ public class ResearchManager {
     public Dictionary<string, float> researchProgress;
     // The tech that each field is currently researching.
     public Dictionary<string, Technology> techSelection;
+    // TODO: Add level 0 tech and initialize this list with it.
     // The tech that's currently owned by the player.
     public Dictionary<string, List<Technology>> possessedTech;
 
-    // TODO: Add method of tracking researched tech, and initialize it with base tech.
     private TechnologyFactory factory;
 
-    public ResearchManager(TechnologyFactory factory) {
-        // TODO: make this able to be retrieved with a getter.
-        this.factory = factory;
-        // TODO: Set up each field and research for level 1 tech.
+    public ResearchManager() {
+        factory = GameManager.techFactory;
+
         researchSpendingBook = new Dictionary<string, float>();
         researchProgress = new Dictionary<string, float>();
         techSelection = new Dictionary<string, Technology>();

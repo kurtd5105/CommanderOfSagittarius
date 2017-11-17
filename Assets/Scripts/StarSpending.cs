@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 // 1M Population costs 20 BC, generate 0.5 BC
 // 1 Factory costs 10 BC, generates 1 BC and costs 1 BC of waste

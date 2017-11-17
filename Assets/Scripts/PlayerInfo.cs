@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 
 public class PlayerInfo {
-
     public Owners playerOwner;
     public Races playerRace;
-    public String flagName;
-    public String CivName;
-    public String HomeworldName;
-    public String leaderName;
+    public string flagName;
+    public string CivName;
+    public string HomeworldName;
+    public string leaderName;
     public Dictionary<uint, Star> ownedStars;
     public ResearchManager researchManager;
 
-	public void Init (Owners playerOwner, String playerRace, String flagName, String CivName, String HomeworldName, String leaderName, TechnologyFactory factory) {
+    public PlayerInfo(Owners playerOwner, string playerRace, string flagName, string CivName, string HomeworldName, string leaderName) {
         this.playerOwner = playerOwner;
         this.playerRace = (Races)System.Enum.Parse(typeof(Races), playerRace);
         this.flagName = flagName;
@@ -22,7 +19,7 @@ public class PlayerInfo {
         this.leaderName = leaderName;
         ownedStars = new Dictionary<uint, Star>();
 
-        researchManager = new ResearchManager(factory);
+        researchManager = new ResearchManager();
 
         ButtonManager.NextTurn += Turn;
         ButtonManager.NextTurnResearch += DoResearch;

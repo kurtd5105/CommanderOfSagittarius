@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Events;
 using System.Linq;
 
 public class GameManager : MonoBehaviour {
@@ -23,8 +21,7 @@ public class GameManager : MonoBehaviour {
     void Awake() {
         if (instance == null) {
             instance = this;
-        }
-        else if (instance != this) {
+        } else if (instance != this) {
             Destroy(gameObject);
         }
 
@@ -85,25 +82,12 @@ public class GameManager : MonoBehaviour {
     }
 
     void CreatePlayers() {
-        playerList = new List<PlayerInfo>();
+        playerList = new List<PlayerInfo> { new PlayerInfo(Owners.PLAYER, newData[0], newData[1], newData[2], newData[4], newData[3]) };
 
-        for (int i = 0; i < playerCount; i++)
-        {
-            PlayerInfo player = new PlayerInfo();
-
-            if (i == 0)
-            {
-                //Create human player
-                player.Init(Owners.PLAYER, newData[0], newData[1], newData[2], newData[4], newData[3], techFactory);
-            }
-            else
-            {
-                //Create rest of AI opponents
-                // Todo: randomize the rest of the details such as flag, civ name, etc
-                player.Init((Owners)(i + 1), newData[0], newData[1], newData[2], newData[4], newData[3], techFactory);
-            }
-
-            playerList.Add(player);
+        for (int i = 1; i < playerCount; i++) {
+            //Create rest of AI opponents
+            // Todo: randomize the rest of the details such as flag, civ name, etc
+            playerList.Add(new PlayerInfo((Owners)(i + 1), newData[0], newData[1], newData[2], newData[4], newData[3]));
         }
     }
 

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 public class StarProperties {
@@ -18,7 +17,7 @@ public class StarProperties {
     public Owners owner;
     public Dictionary<Owners, bool> isExplored;
 
-    public void InitAndGenerate(StarColor color, bool isHomeworld, Owners owner = Owners.NONE) {
+    public StarProperties(StarColor color, bool isHomeworld, Owners owner = Owners.NONE) {
         this.color = color;
         planetModifiers = new List<PlanetModifiers>();
 

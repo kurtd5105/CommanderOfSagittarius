@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class InfoPaneSlider {
@@ -12,7 +10,7 @@ public class InfoPaneSlider {
     public Button SliderRight;
     public Slider SliderBar;
 
-    public void Init(string leftArrow, string rightArrow, string sliderBar, string type, InfoPaneManager manager) {
+    public InfoPaneSlider(string leftArrow, string rightArrow, string sliderBar, string type, InfoPaneManager manager) {
         SliderLeftObj = GameObject.Find(leftArrow);
         SliderRightObj = GameObject.Find(rightArrow);
         SliderBarObj = GameObject.Find(sliderBar);

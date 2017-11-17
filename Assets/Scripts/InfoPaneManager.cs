@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class InfoPaneManager : MonoBehaviour {
@@ -29,40 +27,33 @@ public class InfoPaneManager : MonoBehaviour {
     }
 
     public void InitButtons() {
-        SHPBar = new InfoPaneSlider();
-        DEFBar = new InfoPaneSlider();
-        INDBar = new InfoPaneSlider();
-        ECOBar = new InfoPaneSlider();
-        RESBar = new InfoPaneSlider();
-
-        SHPBar.Init("SHP_Arrow_Left", "SHP_Arrow_Right", "SHP_BAR", "ship",     this);
-        DEFBar.Init("DEF_Arrow_Left", "DEF_Arrow_Right", "DEF_BAR", "defense",  this);
-        INDBar.Init("IND_Arrow_Left", "IND_Arrow_Right", "IND_BAR", "industry", this);
-        ECOBar.Init("ECO_Arrow_Left", "ECO_Arrow_Right", "ECO_BAR", "ecology",  this);
-        RESBar.Init("RES_Arrow_Left", "RES_Arrow_Right", "RES_BAR", "research", this);
+        SHPBar = new InfoPaneSlider("SHP_Arrow_Left", "SHP_Arrow_Right", "SHP_BAR", "ship",     this);
+        DEFBar = new InfoPaneSlider("DEF_Arrow_Left", "DEF_Arrow_Right", "DEF_BAR", "defense",  this);
+        INDBar = new InfoPaneSlider("IND_Arrow_Left", "IND_Arrow_Right", "IND_BAR", "industry", this);
+        ECOBar = new InfoPaneSlider("ECO_Arrow_Left", "ECO_Arrow_Right", "ECO_BAR", "ecology",  this);
+        RESBar = new InfoPaneSlider("RES_Arrow_Left", "RES_Arrow_Right", "RES_BAR", "research", this);
 
         SliderGroup = GameObject.Find("Sliders").GetComponent<CanvasGroup>();
     }
 
     public void OnStarClicked(Star star) {
-        if(colliders() == 1) {
+        if (IsOnlyStarClicked()) {
             currentStar = star;
             UpdatePane();
         }
     }
 
     //Gets number of colliders at point clicked.
-    public int colliders() {
-
+    bool IsOnlyStarClicked() {
         if (Input.GetMouseButtonDown(0)) {
             Vector2 cubeRay = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             //Returns component but possibly not in correct order.
             RaycastHit2D[] hits = Physics2D.RaycastAll(cubeRay, Vector2.zero);
 
-            return hits.Length;
+            return hits.Length == 1;
         }
 
-        return 0;
+        return false;
     }
 
     public void TurnDone() {

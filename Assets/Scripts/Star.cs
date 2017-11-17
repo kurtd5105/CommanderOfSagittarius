@@ -12,8 +12,7 @@ public class Star : MonoBehaviour {
     private InfoPaneManager InfoPane;
 
     public void InitAndGenerate(InfoPaneManager infoPane, StarColor color, bool isHomeworld, uint id, Owners owner = Owners.NONE) {
-        starProperties = new StarProperties();
-        starProperties.InitAndGenerate(color, isHomeworld, owner);
+        starProperties = new StarProperties(color, isHomeworld, owner);
         spendingInfo = new StarSpending();
 
         // Init spending info.
