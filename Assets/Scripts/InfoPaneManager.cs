@@ -45,8 +45,24 @@ public class InfoPaneManager : MonoBehaviour {
     }
 
     public void OnStarClicked(Star star) {
-        currentStar = star;
-        UpdatePane();
+        if(colliders() == 1) {
+            currentStar = star;
+            UpdatePane();
+        }
+    }
+
+    //Gets number of colliders at point clicked.
+    public int colliders() {
+
+        if (Input.GetMouseButtonDown(0)) {
+            Vector2 cubeRay = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            //Returns component but possibly not in correct order.
+            RaycastHit2D[] hits = Physics2D.RaycastAll(cubeRay, Vector2.zero);
+
+            return hits.Length;
+        }
+
+        return 0;
     }
 
     public void TurnDone() {
