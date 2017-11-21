@@ -5,18 +5,25 @@ public class InfoPaneSlider {
     public GameObject SliderLeftObj;
     public GameObject SliderRightObj;
     public GameObject SliderBarObj;
+    public GameObject SliderTextObj;
 
     public Button SliderLeft;
     public Button SliderRight;
     public Slider SliderBar;
 
-    public InfoPaneSlider(string leftArrow, string rightArrow, string sliderBar, string type, InfoPaneManager manager) {
+    public Text SliderText;
+
+    public InfoPaneSlider(string text, string leftArrow, string rightArrow, string sliderBar, string type, InfoPaneManager manager) {
         SliderLeftObj = GameObject.Find(leftArrow);
         SliderRightObj = GameObject.Find(rightArrow);
         SliderBarObj = GameObject.Find(sliderBar);
+        SliderTextObj = GameObject.Find(text);
+
+        Transform test = SliderTextObj.transform.Find(text);
 
         SliderLeft = SliderLeftObj.GetComponent<Button>();
         SliderRight = SliderRightObj.GetComponent<Button>();
+        SliderText = SliderTextObj.GetComponent<Text>();
 
         SliderLeft .onClick.AddListener(() => manager.UpdateSlider(type, -0.1f, "arrow"));
         SliderRight.onClick.AddListener(() => manager.UpdateSlider(type,  0.1f, "arrow"));
@@ -37,5 +44,11 @@ public class InfoPaneSlider {
 
     public void SetValue(float value) {
         SliderBar.value = value;
+    }
+
+    public void ChangeText(string value) {
+        if (SliderText.text != value) {
+            SliderText.text = value;
+        }
     }
 }

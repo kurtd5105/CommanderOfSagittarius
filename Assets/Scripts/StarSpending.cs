@@ -12,6 +12,8 @@ public class StarSpending {
     public float maxPopulation;
     public float effectiveMaxPopulation;
 
+    public bool isOnlyProducingReserves;
+
     // Spending parameter to be set by the planet spending sliders.
 
     public float Production         { get; set; } // in BC
@@ -26,6 +28,8 @@ public class StarSpending {
         foreach (var category in SpendingCategories) {
             SpendingBook.Add(category, 0.0f);
         }
+
+        isOnlyProducingReserves = false;
 
         Production = ((int)population * 0.5f) + (int)factories;
         WasteProduction = (int)factories;
@@ -59,6 +63,7 @@ public class StarSpending {
         //}
     }
 
+    // Input: category name that was set, leftover amount to allocate.
     private void BalanceSpending(string to, float amount) {
         for (int i = SpendingCategories.Length - 1; i >= 0; i--) {
             if (SpendingCategories[i] == to) {
@@ -88,6 +93,9 @@ public class StarSpending {
     public void Calculate() {
         float populationSpent = 0.0f;
         float industrySpent = 0.0f;
+
+        ResearchProduction = SpendingBook["research"] * Production;
+
         // Calculate cleanup of generated waste + existing waste, and spending into population growth.
         if (SpendingBook["ecology"] * Production > WasteProduction / 2) {
             float ecoRemainder = (SpendingBook["ecology"] * Production) - (WasteProduction / 2);
@@ -106,9 +114,14 @@ public class StarSpending {
         // Calculate industry spending.
         industrySpent = SpendingBook["industry"] * Production;
 
+        bool factoriesCreated = false;
+        if (factories < population) {
+            factoriesCreated = true;
+            isOnlyProducingReserves = false;
+        }
+
         // Natural population growth. Starts out low, peaks at half, ends low.
         // TODO: make population grow slower.
-        population += (float)((-Math.Pow(20 * ((maxPopulation / 2.0f) - population) / maxPopulation, 2) + 100.0f) / 1000.0f + 0.01f) * population;
         population += populationSpent / 20.0f;
         factories += industrySpent / 10.0f;
 
@@ -117,10 +130,22 @@ public class StarSpending {
         if (population > effectiveMaxPopulation) {
             reserves += (population - effectiveMaxPopulation) * 20.0f;
             population = effectiveMaxPopulation;
+        } else if (population < effectiveMaxPopulation) {
+            population += (float)((-Math.Pow(20 * ((maxPopulation / 2.0f) - population) / maxPopulation, 2) + 100.0f) / 1000.0f + 0.01f) * population;
+            if (population > effectiveMaxPopulation) {
+                population = effectiveMaxPopulation;
+            }
         }
         if (factories > population) {
+            // Convert overflow to reserves.
             reserves += (factories - population) * 10.0f;
             factories = population;
+            isOnlyProducingReserves = true;
+
+            if (factoriesCreated) {
+                SpendingBook["research"] += SpendingBook["industry"];
+                SpendingBook["industry"] = 0.0f;
+            }
         }
 
         Production = ((int)population * 0.5f) + (int)factories;
@@ -128,11 +153,9 @@ public class StarSpending {
         // TODO: if the slider isn't locked, round to the nearest unit of 5.
 
         if ((WasteProduction / 2) > SpendingBook["ecology"] * Production) {
+            float oldValue = SpendingBook["ecology"];
             SpendingBook["ecology"] = ((WasteProduction / 2) / Production);
+            BalanceSpending("ecology", SpendingBook["ecology"] - oldValue);
         }
-
-        SpendingBook["industry"] = 1.0f - SpendingBook["ecology"];
-
-        ResearchProduction = SpendingBook["research"] * Production;
     }
 }

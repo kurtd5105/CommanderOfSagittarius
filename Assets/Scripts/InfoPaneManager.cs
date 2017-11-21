@@ -27,11 +27,11 @@ public class InfoPaneManager : MonoBehaviour {
     }
 
     public void InitButtons() {
-        SHPBar = new InfoPaneSlider("SHP_Arrow_Left", "SHP_Arrow_Right", "SHP_BAR", "ship",     this);
-        DEFBar = new InfoPaneSlider("DEF_Arrow_Left", "DEF_Arrow_Right", "DEF_BAR", "defense",  this);
-        INDBar = new InfoPaneSlider("IND_Arrow_Left", "IND_Arrow_Right", "IND_BAR", "industry", this);
-        ECOBar = new InfoPaneSlider("ECO_Arrow_Left", "ECO_Arrow_Right", "ECO_BAR", "ecology",  this);
-        RESBar = new InfoPaneSlider("RES_Arrow_Left", "RES_Arrow_Right", "RES_BAR", "research", this);
+        SHPBar = new InfoPaneSlider("Text_SHP", "SHP_Arrow_Left", "SHP_Arrow_Right", "SHP_BAR", "ship",     this);
+        DEFBar = new InfoPaneSlider("Text_DEF", "DEF_Arrow_Left", "DEF_Arrow_Right", "DEF_BAR", "defense",  this);
+        INDBar = new InfoPaneSlider("Text_IND", "IND_Arrow_Left", "IND_Arrow_Right", "IND_BAR", "industry", this);
+        ECOBar = new InfoPaneSlider("Text_ECO", "ECO_Arrow_Left", "ECO_Arrow_Right", "ECO_BAR", "ecology",  this);
+        RESBar = new InfoPaneSlider("Text_RES", "RES_Arrow_Left", "RES_Arrow_Right", "RES_BAR", "research", this);
 
         SliderGroup = GameObject.Find("Sliders").GetComponent<CanvasGroup>();
     }
@@ -63,6 +63,13 @@ public class InfoPaneManager : MonoBehaviour {
     public void UpdateSlider(string name, float value, string element) {
         if (currentStar != null) {
             currentStar.UpdateSpending(name, value, element);
+            if (name == "industry") {
+                if (currentStar.GetIsOnlyProducingReserves() && value > 0.0f) {
+                    INDBar.ChangeText("RSV");
+                } else {
+                    INDBar.ChangeText("IND");
+                }
+            }
             UpdatePane();
         }
     }
