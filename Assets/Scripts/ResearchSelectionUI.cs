@@ -1,14 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ResearchSelectionUI : MonoBehaviour {
 
-    public Text TitlePanel;
+    public Text TitleText;
     public Text DescriptionText;
 
-    public GameObject TitlePanelObj;
+    public GameObject TitleTextObj;
     public GameObject DescriptionTextObj;
     public GameObject ResearchButton1Obj;
     public GameObject ResearchButton2Obj;
@@ -29,8 +28,8 @@ public class ResearchSelectionUI : MonoBehaviour {
 
     public void Init() {
 
-        TitlePanelObj = GameObject.Find("TitlePanel");
-        DescriptionTextObj = GameObject.Find("TitleText");
+        TitleTextObj = GameObject.Find("TitleText");
+        DescriptionTextObj = GameObject.Find("DescriptionText");
         ResearchPanelObj = GameObject.Find("ResearchUI");
         ResearchButton1Obj = GameObject.Find("Technology_1_Button");
         ResearchButton2Obj = GameObject.Find("Technology_2_Button");
@@ -38,7 +37,7 @@ public class ResearchSelectionUI : MonoBehaviour {
         ResearchButton4Obj = GameObject.Find("Technology_4_Button");
         SelectionPanelObj = GameObject.Find("SelectionPanel");
 
-        TitlePanel = TitlePanelObj.GetComponent<Text>();
+        TitleText = TitleTextObj.GetComponent<Text>();
         DescriptionText = DescriptionTextObj.GetComponent<Text>();
 
         ResearchButton1 = ResearchButton1Obj.GetComponent<Button>();
@@ -63,7 +62,7 @@ public class ResearchSelectionUI : MonoBehaviour {
     public void UpdateText(string title, string description, string[] research) {
         UpdateDimensions(research.Length);
 
-        TitlePanel.text = title;
+        TitleText.text = title;
         DescriptionText.text = description;
 
         ResearchPanelObj.SetActive(true);
