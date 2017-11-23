@@ -8,6 +8,9 @@ public class ButtonManager : MonoBehaviour {
     public static event OnNextTurnResearch NextTurnResearch;
     public delegate void OnNextTurnDone();
     public static event OnNextTurnDone NextTurnDone;
+    public delegate void OnMenuClick();
+    public static event OnMenuClick MenuClick;
+
     public void SwitchScene(string newScene) {
         SceneManager.LoadScene(newScene);
     }
@@ -20,5 +23,9 @@ public class ButtonManager : MonoBehaviour {
         NextTurn();
         NextTurnResearch();
         NextTurnDone();
+    }
+
+    public void ResearchClicked() {
+        MenuClick();
     }
 }
