@@ -104,8 +104,8 @@ public class InfoPaneManager : MonoBehaviour {
         INDBar.Enable(enable);
         ECOBar.Enable(enable);
         RESBar.Enable(enable);
-        SliderGroup.alpha = enable ? 1.0f : 0.0f;
-        SliderGroup.blocksRaycasts = enable;
+        //SliderGroup.alpha = enable ? 1.0f : 0.0f;
+        //SliderGroup.blocksRaycasts = enable;
     }
 
     // Detail plate appears just below the star name.

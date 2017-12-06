@@ -56,7 +56,7 @@ public class ResearchSelectionUI : MonoBehaviour {
 
         ResearchPanelObj.SetActive(false);
 
-        UpdateDimensions(1);
+        //UpdateDimensions(1);
     }
 
     public void UpdateText(string title, string description, string[] research) {
